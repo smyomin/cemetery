@@ -1,0 +1,1 @@
+<?php echo 'Cemetery portal is alive'; ?>
