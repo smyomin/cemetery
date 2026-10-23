@@ -28,3 +28,4 @@ a{color:var(--green)}
 .drow:first-child{border-top:0}
 .drow span:first-child{color:var(--muted)}
 .drow b{font-weight:600;text-align:right}
+.err{margin:0 0 12px;padding:10px 12px;border-radius:10px;background:#FBE9E7;color:#8A2D22;font-size:14px}
