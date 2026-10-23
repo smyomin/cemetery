@@ -22,3 +22,9 @@ a{color:var(--green)}
 .sm{font-size:13px;color:var(--muted)}
 .yr{font-size:13px;font-weight:600;background:#F6EEDB;color:#7A5A1E;border-radius:10px;padding:4px 10px}
 .empty{padding:24px 20px;color:var(--muted)}
+.hero .back{display:inline-block;color:#fff;text-decoration:none;margin-bottom:8px}
+.grave-card{margin:-36px 20px 0;padding:0}
+.drow{display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:50px;padding:0 16px;border-top:1px solid var(--line)}
+.drow:first-child{border-top:0}
+.drow span:first-child{color:var(--muted)}
+.drow b{font-weight:600;text-align:right}
