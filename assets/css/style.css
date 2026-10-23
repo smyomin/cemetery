@@ -1,3 +1,8 @@
+:root{--green:#0F4C3A;--green-dark:#0A3528;--gold:#D9B866;--bg:#F3F6F4;--text:#12251F;--muted:#5C6B64;--line:#E3EAE6}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:"Noto Sans","Noto Sans Myanmar",sans-serif;line-height:1.5}
+a{color:var(--green)}
+.container{max-width:520px;margin:0 auto}
 .hero{background:var(--green);color:#fff;padding:20px 0 64px}
 .hero .container{padding:0 20px}
 .ti{font-size:26px;font-weight:700;line-height:1.25;margin:0 0 4px}
