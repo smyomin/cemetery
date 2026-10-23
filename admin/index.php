@@ -21,9 +21,10 @@ $admin = require_admin();
 </header>
 <main class="container">
   <div class="card search-card">
-    <p>Login works. The burial form comes next.</p>
+    <a class="btn" href="/admin/grave-add.php" style="text-align:center;line-height:54px;text-decoration:none;margin:0 0 12px">Add a burial</a>
     <a class="btn" href="/logout.php" style="text-align:center;line-height:54px;text-decoration:none">Log out</a>
   </div>
 </main>
 </body>
 </html>
+

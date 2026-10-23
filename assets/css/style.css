@@ -29,3 +29,5 @@ a{color:var(--green)}
 .drow span:first-child{color:var(--muted)}
 .drow b{font-weight:600;text-align:right}
 .err{margin:0 0 12px;padding:10px 12px;border-radius:10px;background:#FBE9E7;color:#8A2D22;font-size:14px}
+.lbl{display:block;font-weight:600;font-size:14px;margin:14px 0 6px}
+.ok{margin:0 0 12px;padding:10px 12px;border-radius:10px;background:#E4F0EA;color:#0A3528;font-size:14px}
