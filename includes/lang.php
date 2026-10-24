@@ -7,3 +7,7 @@ function t(string $key): string {
     global $STRINGS;
     return htmlspecialchars($STRINGS[$key] ?? $key);
 }
+function tf(string $key, ...$args): string {
+    global $STRINGS;
+    return htmlspecialchars(sprintf($STRINGS[$key] ?? $key, ...$args));
+}

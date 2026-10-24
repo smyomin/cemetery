@@ -1,13 +1,14 @@
 <?php
 require __DIR__ . '/includes/config.php';
+require __DIR__ . '/includes/lang.php';
 
 $q = trim($_GET['q'] ?? '');
 $results = [];
 if ($q !== '') {
     $like = '%' . addcslashes($q, '%_\\') . '%';
     $stmt = $pdo->prepare(
-        'SELECT g.id, g.name_en, g.name_my, g.died_on, g.section, g.plot, m.name_en AS cemetery
-         FROM graves g JOIN cemeteries m ON m.id = g.cemetery_id
+        'SELECT g.id, g.name_en, g.name_my, g.died_on, g.section, g.plot
+         FROM graves g
          WHERE g.name_en LIKE :q1 OR g.name_my LIKE :q2
          ORDER BY g.name_en LIMIT 50'
     );
@@ -23,42 +24,45 @@ function initials(string $name): string {
     }
     return $out;
 }
-
-$pageTitle = 'Search results';
+$qs = $q === '' ? '' : '?q=' . urlencode($q);
 ?>
 <!doctype html>
-<html lang="en">
+<html lang="<?= $lang ?>">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title><?= htmlspecialchars($pageTitle) ?></title>
+  <title><?= t('results') ?></title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700&family=Noto+Sans+Myanmar:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/style.css?v=<?= filemtime(__DIR__ . '/assets/css/style.css') ?>">
 </head>
 <body>
 <header class="hero hero-sm">
   <div class="container">
-    <a class="back" href="/">&larr; Home</a>
-    <h1 class="ti">Results</h1>
-    <p class="su"><?= count($results) ?> found</p>
-    <form action="/search.php" method="get">
-      <input class="in" type="search" name="q" value="<?= htmlspecialchars($q) ?>" aria-label="Search by name">
+    <nav class="top tg" aria-label="Language">
+      <a href="/en/search<?= htmlspecialchars($qs) ?>"<?= $lang === 'en' ? ' class="on"' : '' ?>>EN</a>
+      <a href="/my/search<?= htmlspecialchars($qs) ?>"<?= $lang === 'my' ? ' class="on"' : '' ?>>&#x1019;&#x103C;&#x1014;&#x103A;&#x1019;&#x102C;</a>
+    </nav>
+    <a class="back" href="/<?= $lang ?>/">&larr; <?= t('home') ?></a>
+    <h1 class="ti"><?= t('results') ?></h1>
+    <p class="su"><?= tf('results_found', count($results)) ?></p>
+    <form action="/<?= $lang ?>/search" method="get">
+      <input class="in" type="search" name="q" value="<?= htmlspecialchars($q) ?>" placeholder="<?= t('search_placeholder') ?>" aria-label="<?= t('search_placeholder') ?>">
     </form>
   </div>
 </header>
 <main class="container">
 <?php if ($q === ''): ?>
-  <p class="empty">Type a name to search.</p>
+  <p class="empty"><?= t('type_name') ?></p>
 <?php elseif (!$results): ?>
-  <p class="empty">No graves found for "<?= htmlspecialchars($q) ?>".</p>
+  <p class="empty"><?= tf('no_results', $q) ?></p>
 <?php else: ?>
   <div class="list">
   <?php foreach ($results as $r): ?>
-    <a class="card res" href="/grave.php?id=<?= (int)$r['id'] ?>">
+    <a class="card res" href="/<?= $lang ?>/grave/<?= (int)$r['id'] ?>">
       <span class="av"><?= htmlspecialchars(initials($r['name_en'])) ?></span>
       <span class="grow">
         <b><?= htmlspecialchars($r['name_en']) ?></b><br>
-        <span class="sm"><?= htmlspecialchars($r['name_my'] ?? '') ?> Â· Section <?= htmlspecialchars($r['section']) ?>, Plot <?= htmlspecialchars($r['plot']) ?></span>
+        <span class="sm"><?= htmlspecialchars($r['name_my'] ?? '') ?> · <?= t('section') ?> <?= htmlspecialchars($r['section']) ?>, <?= t('plot') ?> <?= htmlspecialchars($r['plot']) ?></span>
       </span>
       <?php if ($r['died_on']): ?><span class="yr"><?= date('Y', strtotime($r['died_on'])) ?></span><?php endif; ?>
     </a>
