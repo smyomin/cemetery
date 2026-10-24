@@ -1,8 +1,9 @@
 <?php
 require __DIR__ . '/../includes/auth.php';
+require __DIR__ . '/../includes/lang.php';
 $admin = require_admin();
 
-$cems = $pdo->query('SELECT id, name_en FROM cemeteries ORDER BY name_en')->fetchAll();
+$cems = $pdo->query('SELECT id, name_en, name_my FROM cemeteries ORDER BY name_en')->fetchAll();
 if ($admin['cemetery_id'] !== null) {
     $cems = array_values(array_filter($cems, fn($c) => (int)$c['id'] === $admin['cemetery_id']));
 }
@@ -18,17 +19,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $v['cemetery_id'] = (int)$v['cemetery_id'];
     $d = DateTime::createFromFormat('Y-m-d', $v['died_on']);
     if (!csrf_check()) {
-        $err = 'Session expired. Please try again.';
+        $err = 'err_session';
     } elseif (!in_array($v['cemetery_id'], $allowed, true)) {
-        $err = 'Choose a cemetery.';
+        $err = 'err_cemetery';
     } elseif ($v['name_en'] === '' || mb_strlen($v['name_en']) > 150 || mb_strlen($v['name_my']) > 150) {
-        $err = 'Enter the name in English (up to 150 characters).';
+        $err = 'err_name';
     } elseif ($v['section'] === '' || $v['plot'] === '' || mb_strlen($v['section']) > 10 || mb_strlen($v['plot']) > 10) {
-        $err = 'Section and plot are required (up to 10 characters).';
+        $err = 'err_secplot';
     } elseif ($v['died_on'] !== '' && (!$d || $d->format('Y-m-d') !== $v['died_on'] || $d > new DateTime('today'))) {
-        $err = 'Enter a valid date of death that is not in the future.';
+        $err = 'err_date';
     } elseif (mb_strlen($v['hijri_date']) > 40) {
-        $err = 'The Hijri date is too long.';
+        $err = 'err_hijri';
     } else {
         $stmt = $pdo->prepare('INSERT INTO graves (cemetery_id, name_en, name_my, died_on, hijri_date, section, plot) VALUES (:c, :en, :my, :d, :h, :s, :p)');
         $stmt->execute([
@@ -47,54 +48,58 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $savedId = (int)($_GET['saved'] ?? 0);
 ?>
 <!doctype html>
-<html lang="en">
+<html lang="<?= $lang ?>">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex">
-  <title>Add a burial</title>
+  <title><?= t('add_burial') ?></title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700&family=Noto+Sans+Myanmar:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/style.css?v=<?= filemtime(__DIR__ . '/../assets/css/style.css') ?>">
 </head>
 <body>
 <header class="hero">
   <div class="container">
-    <a class="back" href="/admin/">&larr; Admin</a>
-    <h1 class="ti">Add a burial</h1>
+    <nav class="top tg" aria-label="Language">
+      <a href="/admin/grave-add.php?lang=en"<?= $lang === 'en' ? ' class="on"' : '' ?>>EN</a>
+      <a href="/admin/grave-add.php?lang=my"<?= $lang === 'my' ? ' class="on"' : '' ?>>&#x1019;&#x103C;&#x1014;&#x103A;&#x1019;&#x102C;</a>
+    </nav>
+    <a class="back" href="/admin/">&larr; <?= t('admin') ?></a>
+    <h1 class="ti"><?= t('add_burial') ?></h1>
   </div>
 </header>
 <main class="container">
   <form class="card search-card" method="post" action="/admin/grave-add.php">
     <input type="hidden" name="csrf" value="<?= htmlspecialchars(csrf_token()) ?>">
-    <?php if ($savedId): ?><p class="ok">Saved. <a href="/grave.php?id=<?= $savedId ?>">View the grave page</a></p><?php endif; ?>
-    <?php if ($err): ?><p class="err"><?= htmlspecialchars($err) ?></p><?php endif; ?>
+    <?php if ($savedId): ?><p class="ok"><?= t('saved') ?> <a href="/<?= $lang ?>/grave/<?= $savedId ?>"><?= t('view_grave') ?></a></p><?php endif; ?>
+    <?php if ($err): ?><p class="err"><?= t($err) ?></p><?php endif; ?>
 
-    <label class="lbl" for="cemetery_id">Cemetery</label>
+    <label class="lbl" for="cemetery_id"><?= t('cemetery') ?></label>
     <select class="in" id="cemetery_id" name="cemetery_id">
       <?php foreach ($cems as $c): ?>
-        <option value="<?= (int)$c['id'] ?>"<?= (int)$c['id'] === $v['cemetery_id'] ? ' selected' : '' ?>><?= htmlspecialchars($c['name_en']) ?></option>
+        <option value="<?= (int)$c['id'] ?>"<?= (int)$c['id'] === $v['cemetery_id'] ? ' selected' : '' ?>><?= htmlspecialchars(($lang === 'my' && $c['name_my']) ? $c['name_my'] : $c['name_en']) ?></option>
       <?php endforeach; ?>
     </select>
 
-    <label class="lbl" for="name_en">Name (English)</label>
+    <label class="lbl" for="name_en"><?= t('name_en') ?></label>
     <input class="in" id="name_en" name="name_en" value="<?= htmlspecialchars($v['name_en']) ?>" maxlength="150" required>
 
-    <label class="lbl" for="name_my">Name (Burmese)</label>
+    <label class="lbl" for="name_my"><?= t('name_my') ?></label>
     <input class="in" id="name_my" name="name_my" value="<?= htmlspecialchars($v['name_my']) ?>" maxlength="150">
 
-    <label class="lbl" for="died_on">Date of death</label>
+    <label class="lbl" for="died_on"><?= t('died_on') ?></label>
     <input class="in" id="died_on" name="died_on" type="date" value="<?= htmlspecialchars($v['died_on']) ?>">
 
-    <label class="lbl" for="hijri_date">Hijri date</label>
+    <label class="lbl" for="hijri_date"><?= t('hijri_date') ?></label>
     <input class="in" id="hijri_date" name="hijri_date" value="<?= htmlspecialchars($v['hijri_date']) ?>" maxlength="40" placeholder="7 Rajab 1440">
 
-    <label class="lbl" for="section">Section</label>
+    <label class="lbl" for="section"><?= t('section') ?></label>
     <input class="in" id="section" name="section" value="<?= htmlspecialchars($v['section']) ?>" maxlength="10" required>
 
-    <label class="lbl" for="plot">Plot</label>
+    <label class="lbl" for="plot"><?= t('plot') ?></label>
     <input class="in" id="plot" name="plot" value="<?= htmlspecialchars($v['plot']) ?>" maxlength="10" required>
 
-    <button class="btn" type="submit">Save burial</button>
+    <button class="btn" type="submit"><?= t('save_burial') ?></button>
   </form>
 </main>
 </body>
