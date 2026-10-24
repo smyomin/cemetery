@@ -27,6 +27,12 @@ require __DIR__ . '/includes/lang.php';
     <input class="in" type="search" name="q" placeholder="<?= t('search_placeholder') ?>" aria-label="<?= t('search_placeholder') ?>">
     <button class="btn" type="submit"><?= t('search_button') ?></button>
   </form>
-</main>
+  <h2 class="sec"><?= t('info_heading') ?></h2>
+  <div class="card list-card">
+    <a class="irow" href="/<?= $lang ?>/page/about"><?= t('info_about') ?><span>&rsaquo;</span></a>
+    <a class="irow" href="/<?= $lang ?>/page/janazah-guide"><?= t('info_janazah') ?><span>&rsaquo;</span></a>
+    <a class="irow" href="/<?= $lang ?>/page/rules-and-hours"><?= t('info_rules') ?><span>&rsaquo;</span></a>
+  </div></main>
 </body>
 </html>
+
