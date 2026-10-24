@@ -22,4 +22,6 @@ return [
     'err_secplot' => 'Section and plot are required (up to 10 characters).',
     'err_date' => 'Enter a valid date of death that is not in the future.',
     'err_hijri' => 'The Hijri date is too long.',
-];
+    'burial_list' => 'Burials',
+    'no_burials' => 'No burials yet.',
+    'view' => 'View',];
