@@ -1,0 +1,5 @@
+RewriteEngine On
+RewriteRule ^$ /en/ [R=302,L]
+RewriteRule ^(en|my)/?$ index.php?lang=$1 [L,QSA]
+RewriteRule ^(en|my)/search/?$ search.php?lang=$1 [L,QSA]
+RewriteRule ^(en|my)/grave/([0-9]+)/?$ grave.php?lang=$1&id=$2 [L,QSA]

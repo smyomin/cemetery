@@ -31,3 +31,7 @@ a{color:var(--green)}
 .err{margin:0 0 12px;padding:10px 12px;border-radius:10px;background:#FBE9E7;color:#8A2D22;font-size:14px}
 .lbl{display:block;font-weight:600;font-size:14px;margin:14px 0 6px}
 .ok{margin:0 0 12px;padding:10px 12px;border-radius:10px;background:#E4F0EA;color:#0A3528;font-size:14px}
+.top{display:flex;justify-content:flex-end;margin-bottom:6px}
+.tg{display:flex;width:max-content;margin-left:auto;background:rgba(255,255,255,.14);border-radius:22px;padding:3px}
+.tg a{min-height:38px;padding:0 14px;display:flex;align-items:center;border-radius:19px;color:#fff;text-decoration:none;font-size:14px}
+.tg a.on{background:#fff;color:var(--green);font-weight:600}
