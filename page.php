@@ -35,7 +35,7 @@ if ($file) {
       <a href="/en/page/<?= htmlspecialchars($slug) ?>"<?= $lang === 'en' ? ' class="on"' : '' ?>>EN</a>
       <a href="/my/page/<?= htmlspecialchars($slug) ?>"<?= $lang === 'my' ? ' class="on"' : '' ?>>&#x1019;&#x103C;&#x1014;&#x103A;&#x1019;&#x102C;</a>
     </nav>
-    <a class="back" href="/<?= $lang ?>/">&larr; Home</a>
+    <a class="back" href="/<?= $lang ?>/">&larr; <?= t("home") ?></a>
     <h1 class="ti"><?= htmlspecialchars($title) ?></h1>
   </div>
 </header>
@@ -44,3 +44,4 @@ if ($file) {
 </main>
 </body>
 </html>
+
