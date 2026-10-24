@@ -35,3 +35,6 @@ a{color:var(--green)}
 .tg{display:flex;width:max-content;margin-left:auto;background:rgba(255,255,255,.14);border-radius:22px;padding:3px}
 .tg a{min-height:38px;padding:0 14px;display:flex;align-items:center;border-radius:19px;color:#fff;text-decoration:none;font-size:14px}
 .tg a.on{background:#fff;color:var(--green);font-weight:600}
+.page{padding:20px}
+.page p{margin:0 0 12px}
+.page h2{font-size:18px;margin:20px 0 8px}
