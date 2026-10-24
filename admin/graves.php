@@ -43,12 +43,12 @@ $rows = $stmt->fetchAll();
 <?php else: ?>
   <div class="list">
   <?php foreach ($rows as $r): ?>
-    <a class="card res" href="/<?= $lang ?>/grave/<?= (int)$r['id'] ?>">
+    <a class="card res" href="/admin/grave-edit.php?id=<?= (int)$r['id'] ?>">
       <span class="grow">
         <b><?= htmlspecialchars(($lang === 'my' && $r['name_my']) ? $r['name_my'] : $r['name_en']) ?></b><br>
         <span class="sm"><?= htmlspecialchars(($lang === 'my' && $r['cemetery_my']) ? $r['cemetery_my'] : $r['cemetery_en']) ?> · <?= t('section') ?> <?= htmlspecialchars($r['section']) ?>, <?= t('plot') ?> <?= htmlspecialchars($r['plot']) ?></span>
       </span>
-      <span class="yr"><?= t('view') ?></span>
+      <span class="yr"><?= t('edit') ?></span>
     </a>
   <?php endforeach; ?>
   </div>

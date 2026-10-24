@@ -24,4 +24,8 @@ return [
     'err_hijri' => 'The Hijri date is too long.',
     'burial_list' => 'Burials',
     'no_burials' => 'No burials yet.',
-    'view' => 'View',];
+    'view' => 'View',    'edit' => 'Edit',
+    'edit_burial' => 'Edit burial',
+    'save_changes' => 'Save changes',
+    'changes_saved' => 'Changes saved.',
+    'not_found' => 'Record not found.',];
