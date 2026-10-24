@@ -20,3 +20,9 @@ function require_admin(): array {
     }
     return $_SESSION['admin'];
 }
+
+function grave_no_taken(PDO $pdo, int $cem, string $no, int $exceptId): bool {
+    $s = $pdo->prepare('SELECT COUNT(*) FROM graves WHERE cemetery_id = :c AND grave_no = :n AND id <> :i');
+    $s->execute([':c' => $cem, ':n' => $no, ':i' => $exceptId]);
+    return (int)$s->fetchColumn() > 0;
+}

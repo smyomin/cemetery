@@ -20,6 +20,7 @@ $v = [
     'hijri_date' => $g['hijri_date'] ?? '',
     'section' => $g['section'],
     'plot' => $g['plot'],
+    'grave_no' => $g['grave_no'] ?? '',
 ];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -37,8 +38,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $err = 'err_date';
     } elseif (mb_strlen($v['hijri_date']) > 40) {
         $err = 'err_hijri';
+    } elseif (mb_strlen($v['grave_no']) > 20) {
+        $err = 'err_grave_no';
+    } elseif ($v['grave_no'] !== '' && grave_no_taken($pdo, (int)$g['cemetery_id'], $v['grave_no'], $id)) {
+        $err = 'err_dup';
     } else {
-        $u = $pdo->prepare('UPDATE graves SET name_en = :en, name_my = :my, died_on = :d, hijri_date = :h, section = :s, plot = :p WHERE id = :id');
+        $u = $pdo->prepare('UPDATE graves SET name_en = :en, name_my = :my, died_on = :d, hijri_date = :h, section = :s, plot = :p, grave_no = :g WHERE id = :id');
         $u->execute([
             ':en' => $v['name_en'],
             ':my' => $v['name_my'] === '' ? null : $v['name_my'],
@@ -46,6 +51,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':h' => $v['hijri_date'] === '' ? null : $v['hijri_date'],
             ':s' => $v['section'],
             ':p' => $v['plot'],
+            ':g' => $v['grave_no'] === '' ? null : $v['grave_no'],
             ':id' => $id,
         ]);
         header('Location: /admin/grave-edit.php?id=' . $id . '&updated=1');
@@ -100,6 +106,8 @@ $cem = ($lang === 'my' && $g['cem_my']) ? $g['cem_my'] : $g['cem_en'];
     <label class="lbl" for="plot"><?= t('plot') ?></label>
     <input class="in" id="plot" name="plot" value="<?= htmlspecialchars($v['plot']) ?>" maxlength="10" required>
 
+        <label class="lbl" for="grave_no"><?= t('grave_no') ?></label>
+    <input class="in" id="grave_no" name="grave_no" value="<?= htmlspecialchars($v['grave_no']) ?>" maxlength="20">
     <button class="btn" type="submit"><?= t('save_changes') ?></button>
   </form>
 </main>

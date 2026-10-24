@@ -10,7 +10,7 @@ if ($admin['cemetery_id'] !== null) {
 $allowed = array_map(fn($c) => (int)$c['id'], $cems);
 
 $err = '';
-$v = ['cemetery_id' => $allowed[0] ?? 0, 'name_en' => '', 'name_my' => '', 'died_on' => '', 'hijri_date' => '', 'section' => '', 'plot' => ''];
+$v = ['cemetery_id' => $allowed[0] ?? 0, 'name_en' => '', 'name_my' => '', 'died_on' => '', 'hijri_date' => '', 'section' => '', 'plot' => '', 'grave_no' => ''];
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     foreach ($v as $k => $_) {
@@ -30,8 +30,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $err = 'err_date';
     } elseif (mb_strlen($v['hijri_date']) > 40) {
         $err = 'err_hijri';
+    } elseif (mb_strlen($v['grave_no']) > 20) {
+        $err = 'err_grave_no';
+    } elseif ($v['grave_no'] !== '' && grave_no_taken($pdo, $v['cemetery_id'], $v['grave_no'], 0)) {
+        $err = 'err_dup';
     } else {
-        $stmt = $pdo->prepare('INSERT INTO graves (cemetery_id, name_en, name_my, died_on, hijri_date, section, plot) VALUES (:c, :en, :my, :d, :h, :s, :p)');
+        $stmt = $pdo->prepare('INSERT INTO graves (cemetery_id, name_en, name_my, died_on, hijri_date, section, plot, grave_no) VALUES (:c, :en, :my, :d, :h, :s, :p, :g)');
         $stmt->execute([
             ':c' => $v['cemetery_id'],
             ':en' => $v['name_en'],
@@ -40,6 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':h' => $v['hijri_date'] === '' ? null : $v['hijri_date'],
             ':s' => $v['section'],
             ':p' => $v['plot'],
+            ':g' => $v['grave_no'] === '' ? null : $v['grave_no'],
         ]);
         header('Location: /admin/grave-add.php?saved=' . $pdo->lastInsertId());
         exit;
@@ -99,6 +104,8 @@ $savedId = (int)($_GET['saved'] ?? 0);
     <label class="lbl" for="plot"><?= t('plot') ?></label>
     <input class="in" id="plot" name="plot" value="<?= htmlspecialchars($v['plot']) ?>" maxlength="10" required>
 
+        <label class="lbl" for="grave_no"><?= t('grave_no') ?></label>
+    <input class="in" id="grave_no" name="grave_no" value="<?= htmlspecialchars($v['grave_no']) ?>" maxlength="20">
     <button class="btn" type="submit"><?= t('save_burial') ?></button>
   </form>
 </main>

@@ -28,4 +28,5 @@ return [
     'edit_burial' => 'Edit burial',
     'save_changes' => 'Save changes',
     'changes_saved' => 'Changes saved.',
-    'not_found' => 'Record not found.',];
+    'not_found' => 'Record not found.',    'err_dup' => 'This grave number is already used in this cemetery.',
+    'err_grave_no' => 'The grave number is too long (up to 20 characters).',];

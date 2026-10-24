@@ -9,10 +9,10 @@ if ($q !== '') {
     $stmt = $pdo->prepare(
         'SELECT g.id, g.name_en, g.name_my, g.died_on, g.section, g.plot
          FROM graves g
-         WHERE g.name_en LIKE :q1 OR g.name_my LIKE :q2
+         WHERE g.name_en LIKE :q1 OR g.name_my LIKE :q2 OR g.grave_no = :q3
          ORDER BY g.name_en LIMIT 50'
     );
-    $stmt->execute([':q1' => $like, ':q2' => $like]);
+    $stmt->execute([':q1' => $like, ':q2' => $like, ':q3' => $q]);
     $results = $stmt->fetchAll();
 }
 
@@ -62,7 +62,7 @@ $qs = $q === '' ? '' : '?q=' . urlencode($q);
       <span class="av"><?= htmlspecialchars(initials($r['name_en'])) ?></span>
       <span class="grow">
         <b><?= htmlspecialchars($r['name_en']) ?></b><br>
-        <span class="sm"><?= htmlspecialchars($r['name_my'] ?? '') ?> · <?= t('section') ?> <?= htmlspecialchars($r['section']) ?>, <?= t('plot') ?> <?= htmlspecialchars($r['plot']) ?></span>
+        <span class="sm"><?= htmlspecialchars($r['name_my'] ?? '') ?> ï¿½ <?= t('section') ?> <?= htmlspecialchars($r['section']) ?>, <?= t('plot') ?> <?= htmlspecialchars($r['plot']) ?></span>
       </span>
       <?php if ($r['died_on']): ?><span class="yr"><?= date('Y', strtotime($r['died_on'])) ?></span><?php endif; ?>
     </a>

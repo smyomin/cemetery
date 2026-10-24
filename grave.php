@@ -61,6 +61,7 @@ if ($g) {
     <div class="drow"><span><?= t('cemetery') ?></span><b><?= htmlspecialchars($cem) ?></b></div>
     <div class="drow"><span><?= t('section') ?></span><b><?= htmlspecialchars($g['section']) ?></b></div>
     <div class="drow"><span><?= t('plot') ?></span><b><?= htmlspecialchars($g['plot']) ?></b></div>
+    <?php if ($g['grave_no']): ?><div class="drow"><span><?= t('grave_no') ?></span><b><?= htmlspecialchars($g['grave_no']) ?></b></div><?php endif; ?>
   </div>
 <?php endif; ?>
 </main>

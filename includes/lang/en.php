@@ -20,7 +20,4 @@ return [
     'hijri' => 'Hijri',
     'cemetery' => 'Cemetery',
     'grave_not_found' => 'This grave could not be found.',
-];
-
-
-
+    'grave_no' => 'Grave number',];
