@@ -16,6 +16,11 @@ return [
     'no_results' => 'No graves found for "%s".',
     'section' => 'Section',
     'plot' => 'Plot',
+    'died' => 'Died',
+    'hijri' => 'Hijri',
+    'cemetery' => 'Cemetery',
+    'grave_not_found' => 'This grave could not be found.',
 ];
+
 
 

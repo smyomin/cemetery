@@ -1,9 +1,10 @@
 <?php
 require __DIR__ . '/includes/config.php';
+require __DIR__ . '/includes/lang.php';
 
 $id = (int)($_GET['id'] ?? 0);
 $stmt = $pdo->prepare(
-    'SELECT g.*, m.name_en AS cemetery
+    'SELECT g.*, m.name_en AS cemetery_en, m.name_my AS cemetery_my
      FROM graves g JOIN cemeteries m ON m.id = g.cemetery_id
      WHERE g.id = :id'
 );
@@ -12,35 +13,54 @@ $g = $stmt->fetch();
 if (!$g) {
     http_response_code(404);
 }
-$pageTitle = $g ? $g['name_en'] : 'Grave not found';
+$title = '';
+$sub = '';
+$cem = '';
+$date = '';
+if ($g) {
+    $useMy = $lang === 'my' && $g['name_my'];
+    $title = $useMy ? $g['name_my'] : $g['name_en'];
+    $sub = $useMy ? $g['name_en'] : ($g['name_my'] ?? '');
+    $cem = ($lang === 'my' && $g['cemetery_my']) ? $g['cemetery_my'] : $g['cemetery_en'];
+    if ($g['died_on']) {
+        $ts = strtotime($g['died_on']);
+        $date = $lang === 'my' ? date('d-m-Y', $ts) : date('j F Y', $ts);
+    }
+}
 ?>
 <!doctype html>
-<html lang="en">
+<html lang="<?= $lang ?>">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title><?= htmlspecialchars($pageTitle) ?></title>
+  <title><?= htmlspecialchars($title ?: t('grave_not_found')) ?></title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700&family=Noto+Sans+Myanmar:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/style.css?v=<?= filemtime(__DIR__ . '/assets/css/style.css') ?>">
 </head>
 <body>
 <header class="hero">
   <div class="container">
-    <a class="back" href="/">&larr; Home</a>
-    <h1 class="ti"><?= htmlspecialchars($pageTitle) ?></h1>
-    <?php if ($g && $g['name_my']): ?><p class="su"><?= htmlspecialchars($g['name_my']) ?></p><?php endif; ?>
+    <nav class="top tg" aria-label="Language">
+      <a href="/en/grave/<?= $id ?>"<?= $lang === 'en' ? ' class="on"' : '' ?>>EN</a>
+      <a href="/my/grave/<?= $id ?>"<?= $lang === 'my' ? ' class="on"' : '' ?>>&#x1019;&#x103C;&#x1014;&#x103A;&#x1019;&#x102C;</a>
+    </nav>
+    <a class="back" href="/<?= $lang ?>/">&larr; <?= t('home') ?></a>
+    <?php if ($g): ?>
+      <h1 class="ti"><?= htmlspecialchars($title) ?></h1>
+      <?php if ($sub): ?><p class="su"><?= htmlspecialchars($sub) ?></p><?php endif; ?>
+    <?php else: ?>
+      <h1 class="ti"><?= t('grave_not_found') ?></h1>
+    <?php endif; ?>
   </div>
 </header>
 <main class="container">
-<?php if (!$g): ?>
-  <p class="empty">This grave could not be found.</p>
-<?php else: ?>
+<?php if ($g): ?>
   <div class="card grave-card">
-    <?php if ($g['died_on']): ?><div class="drow"><span>Died</span><b><?= date('j F Y', strtotime($g['died_on'])) ?></b></div><?php endif; ?>
-    <?php if ($g['hijri_date']): ?><div class="drow"><span>Hijri</span><b><?= htmlspecialchars($g['hijri_date']) ?></b></div><?php endif; ?>
-    <div class="drow"><span>Cemetery</span><b><?= htmlspecialchars($g['cemetery']) ?></b></div>
-    <div class="drow"><span>Section</span><b><?= htmlspecialchars($g['section']) ?></b></div>
-    <div class="drow"><span>Plot</span><b><?= htmlspecialchars($g['plot']) ?></b></div>
+    <?php if ($date): ?><div class="drow"><span><?= t('died') ?></span><b><?= htmlspecialchars($date) ?></b></div><?php endif; ?>
+    <?php if ($g['hijri_date']): ?><div class="drow"><span><?= t('hijri') ?></span><b><?= htmlspecialchars($g['hijri_date']) ?></b></div><?php endif; ?>
+    <div class="drow"><span><?= t('cemetery') ?></span><b><?= htmlspecialchars($cem) ?></b></div>
+    <div class="drow"><span><?= t('section') ?></span><b><?= htmlspecialchars($g['section']) ?></b></div>
+    <div class="drow"><span><?= t('plot') ?></span><b><?= htmlspecialchars($g['plot']) ?></b></div>
   </div>
 <?php endif; ?>
 </main>
