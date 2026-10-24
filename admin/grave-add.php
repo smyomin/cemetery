@@ -46,7 +46,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':p' => $v['plot'],
             ':g' => $v['grave_no'] === '' ? null : $v['grave_no'],
         ]);
-        header('Location: /admin/grave-add.php?saved=' . $pdo->lastInsertId());
+        $newId = $pdo->lastInsertId();
+        $pdo->prepare('INSERT IGNORE INTO sections (cemetery_id, code) VALUES (:c, :s)')->execute([':c' => $v['cemetery_id'], ':s' => $v['section']]);
+        header('Location: /admin/grave-add.php?saved=' . $newId);
         exit;
     }
 }

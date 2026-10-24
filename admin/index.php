@@ -28,6 +28,7 @@ $admin = require_admin();
   <div class="card search-card">
     <a class="btn" href="/admin/grave-add.php" style="text-align:center;line-height:54px;text-decoration:none;margin:0 0 12px"><?= t('add_burial') ?></a>
     <a class="btn" href="/admin/graves.php" style="text-align:center;line-height:54px;text-decoration:none;margin:0 0 12px"><?= t('burial_list') ?></a>
+    <a class="btn" href="/admin/sections.php" style="text-align:center;line-height:54px;text-decoration:none;margin:0 0 12px"><?= t('blocks') ?></a>
     <a class="btn" href="/logout.php" style="text-align:center;line-height:54px;text-decoration:none"><?= t('logout') ?></a>
   </div>
 </main>

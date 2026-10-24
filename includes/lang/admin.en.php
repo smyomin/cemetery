@@ -29,4 +29,17 @@ return [
     'save_changes' => 'Save changes',
     'changes_saved' => 'Changes saved.',
     'not_found' => 'Record not found.',    'err_dup' => 'This grave number is already used in this cemetery.',
-    'err_grave_no' => 'The grave number is too long (up to 20 characters).',];
+    'err_grave_no' => 'The grave number is too long (up to 20 characters).',    'blocks' => 'Blocks',
+    'block' => 'Block',
+    'edit_block' => 'Edit block',
+    'directions_en' => 'Directions (English)',
+    'directions_my' => 'Directions (Burmese)',
+    'latitude' => 'Latitude',
+    'longitude' => 'Longitude',
+    'use_location' => 'Use my current location',
+    'gps_hint' => 'Stand in the block and tap the button, or type the numbers.',
+    'err_gps' => 'Latitude and longitude must be valid numbers, or both empty.',
+    'err_long' => 'The directions text is too long (up to 1000 characters).',
+    'no_blocks' => 'No blocks yet. They appear when you add a burial.',
+    'has_pin' => 'GPS saved',
+    'no_pin' => 'No GPS yet',];

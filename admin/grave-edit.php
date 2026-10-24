@@ -54,6 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':g' => $v['grave_no'] === '' ? null : $v['grave_no'],
             ':id' => $id,
         ]);
+        $pdo->prepare('INSERT IGNORE INTO sections (cemetery_id, code) VALUES (:c, :s)')->execute([':c' => (int)$g['cemetery_id'], ':s' => $v['section']]);
         header('Location: /admin/grave-edit.php?id=' . $id . '&updated=1');
         exit;
     }
