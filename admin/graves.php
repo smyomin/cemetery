@@ -38,6 +38,7 @@ $rows = $stmt->fetchAll();
   </div>
 </header>
 <main class="container">
+<?php if (isset($_GET['deleted'])): ?><p class="ok" style="margin:16px 20px 0"><?= t('deleted') ?></p><?php endif; ?>
 <?php if (!$rows): ?>
   <p class="empty"><?= t('no_burials') ?></p>
 <?php else: ?>

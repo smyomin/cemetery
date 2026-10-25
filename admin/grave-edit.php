@@ -133,6 +133,11 @@ $cem = ($lang === 'my' && $g['cem_my']) ? $g['cem_my'] : $g['cem_en'];
 
     <button class="btn" type="submit"><?= t('save_changes') ?></button>
   </form>
+  <form class="card" method="post" action="/admin/grave-delete.php" style="margin:14px 20px 24px;padding:16px" onsubmit="return confirm(<?= htmlspecialchars(json_encode($STRINGS['confirm_delete']), ENT_QUOTES) ?>)">
+    <input type="hidden" name="csrf" value="<?= htmlspecialchars(csrf_token()) ?>">
+    <input type="hidden" name="id" value="<?= $id ?>">
+    <button class="btn" type="submit" style="margin-top:0;background:#8A2D22"><?= t('delete_burial') ?></button>
+  </form>
 </main>
 </body>
 </html>
