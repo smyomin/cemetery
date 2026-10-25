@@ -1,6 +1,7 @@
 <?php
 require __DIR__ . '/../includes/auth.php';
 require __DIR__ . '/../includes/lang.php';
+require __DIR__ . '/../includes/photo.php';
 $admin = require_admin();
 
 $id = (int)($_GET['id'] ?? 0);
@@ -55,7 +56,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':id' => $id,
         ]);
         $pdo->prepare('INSERT IGNORE INTO sections (cemetery_id, code) VALUES (:c, :s)')->execute([':c' => (int)$g['cemetery_id'], ':s' => $v['section']]);
-        header('Location: /admin/grave-edit.php?id=' . $id . '&updated=1');
+        $consent = isset($_POST['photo_consent']) ? 1 : 0;
+        [$pp, $e1] = apply_photo('person_photo', 'people', $g['person_photo'], isset($_POST['remove_person_photo']));
+        [$gp, $e2] = apply_photo('grave_photo', 'graves', $g['grave_photo'], isset($_POST['remove_grave_photo']));
+        $pdo->prepare('UPDATE graves SET person_photo = :pp, grave_photo = :gp, photo_consent = :pc WHERE id = :id')->execute([':pp' => $pp, ':gp' => $gp, ':pc' => $consent, ':id' => $id]);
+        $q = ($e1 || $e2) ? '&photoerr=1' : '';
+        header('Location: /admin/grave-edit.php?id=' . $id . '&updated=1' . $q);
         exit;
     }
 }
@@ -84,9 +90,10 @@ $cem = ($lang === 'my' && $g['cem_my']) ? $g['cem_my'] : $g['cem_en'];
   </div>
 </header>
 <main class="container">
-  <form class="card search-card" method="post" action="/admin/grave-edit.php?id=<?= $id ?>">
+  <form class="card search-card" method="post" action="/admin/grave-edit.php?id=<?= $id ?>" enctype="multipart/form-data">
     <input type="hidden" name="csrf" value="<?= htmlspecialchars(csrf_token()) ?>">
     <?php if (isset($_GET['updated'])): ?><p class="ok"><?= t('changes_saved') ?> <a href="/<?= $lang ?>/grave/<?= $id ?>"><?= t('view_grave') ?></a></p><?php endif; ?>
+    <?php if (isset($_GET['photoerr'])): ?><p class="err"><?= t('err_photo') ?></p><?php endif; ?>
     <?php if ($err): ?><p class="err"><?= t($err) ?></p><?php endif; ?>
 
     <label class="lbl" for="name_en"><?= t('name_en') ?></label>
@@ -109,6 +116,21 @@ $cem = ($lang === 'my' && $g['cem_my']) ? $g['cem_my'] : $g['cem_en'];
 
         <label class="lbl" for="grave_no"><?= t('grave_no') ?></label>
     <input class="in" id="grave_no" name="grave_no" value="<?= htmlspecialchars($v['grave_no']) ?>" maxlength="20">
+    <label class="lbl" for="person_photo"><?= t('person_photo') ?></label>
+    <?php if ($g['person_photo']): ?>
+      <img class="avatar" src="/uploads/people/<?= htmlspecialchars($g['person_photo']) ?>" alt="" style="margin-bottom:8px">
+      <label style="display:flex;gap:10px;align-items:center;margin:0 0 10px;font-size:14px"><input type="checkbox" name="remove_person_photo" value="1" style="width:22px;height:22px"> <?= t('remove_photo') ?></label>
+    <?php endif; ?>
+    <input class="in" id="person_photo" name="person_photo" type="file" accept="image/*" style="height:auto;padding:12px 16px">
+    <label style="display:flex;gap:10px;align-items:flex-start;margin-top:10px;font-size:14px"><input type="checkbox" name="photo_consent" value="1"<?= $g['photo_consent'] ? ' checked' : '' ?> style="width:22px;height:22px;flex:none"> <span><?= t('photo_consent') ?></span></label>
+
+    <label class="lbl" for="grave_photo"><?= t('grave_photo') ?></label>
+    <?php if ($g['grave_photo']): ?>
+      <img class="gphoto" src="/uploads/graves/<?= htmlspecialchars($g['grave_photo']) ?>" alt="" style="width:100%;margin:0 0 8px">
+      <label style="display:flex;gap:10px;align-items:center;margin:0 0 10px;font-size:14px"><input type="checkbox" name="remove_grave_photo" value="1" style="width:22px;height:22px"> <?= t('remove_photo') ?></label>
+    <?php endif; ?>
+    <input class="in" id="grave_photo" name="grave_photo" type="file" accept="image/*" style="height:auto;padding:12px 16px">
+
     <button class="btn" type="submit"><?= t('save_changes') ?></button>
   </form>
 </main>

@@ -45,4 +45,4 @@ return [
     'no_pin' => 'No GPS yet',    'person_photo' => 'Photo of the person (optional)',
     'grave_photo' => 'Photo of the grave (optional)',
     'photo_consent' => 'The family agreed to show the photo of the person online',
-    'err_photo' => 'The burial was saved, but a photo could not be used. Use a JPG, PNG or WebP image under 8 MB.',];
+    'err_photo' => 'The burial was saved, but a photo could not be used. Use a JPG, PNG or WebP image under 8 MB.',    'remove_photo' => 'Remove this photo',];

@@ -30,3 +30,21 @@ function save_photo(array $f, string $sub): array {
     if (!imagejpeg($img, $dir . '/' . $name, 82)) { return [null, 'err_photo']; }
     return [$name, null];
 }
+function delete_photo(string $sub, ?string $name): void {
+    if ($name && preg_match('/^[a-f0-9]{24}\.jpg$/', $name)) {
+        @unlink(__DIR__ . '/../uploads/' . $sub . '/' . $name);
+    }
+}
+
+function apply_photo(string $field, string $sub, ?string $current, bool $remove): array {
+    [$new, $err] = save_photo($_FILES[$field] ?? ['error' => UPLOAD_ERR_NO_FILE], $sub);
+    if ($new) {
+        delete_photo($sub, $current);
+        return [$new, false];
+    }
+    if ($remove) {
+        delete_photo($sub, $current);
+        return [null, $err !== null];
+    }
+    return [$current, $err !== null];
+}
