@@ -4,8 +4,11 @@ require __DIR__ . '/includes/lang.php';
 
 $id = (int)($_GET['id'] ?? 0);
 $stmt = $pdo->prepare(
-    'SELECT g.*, m.name_en AS cemetery_en, m.name_my AS cemetery_my, s.directions_en, s.directions_my, COALESCE(s.lat, m.lat) AS lat, COALESCE(s.lng, m.lng) AS lng
-     FROM graves g JOIN cemeteries m ON m.id = g.cemetery_id LEFT JOIN sections s ON s.cemetery_id = g.cemetery_id AND s.code = g.section
+    'SELECT g.*, m.name_en AS cemetery_en, m.name_my AS cemetery_my,
+            s.directions_en, s.directions_my,
+            COALESCE(s.lat, m.lat) AS lat, COALESCE(s.lng, m.lng) AS lng
+     FROM graves g JOIN cemeteries m ON m.id = g.cemetery_id
+     LEFT JOIN sections s ON s.cemetery_id = g.cemetery_id AND s.code = g.section
      WHERE g.id = :id'
 );
 $stmt->execute([':id' => $id]);
@@ -17,6 +20,11 @@ $title = '';
 $sub = '';
 $cem = '';
 $date = '';
+$dir = '';
+$initial = '';
+$showP = false;
+$showG = false;
+$hasPin = false;
 if ($g) {
     $useMy = $lang === 'my' && $g['name_my'];
     $title = $useMy ? $g['name_my'] : $g['name_en'];
@@ -26,6 +34,11 @@ if ($g) {
         $ts = strtotime($g['died_on']);
         $date = $lang === 'my' ? date('d-m-Y', $ts) : date('j F Y', $ts);
     }
+    $dir = ($lang === 'my' && $g['directions_my']) ? $g['directions_my'] : ($g['directions_en'] ?? '');
+    $showP = $g['person_photo'] && $g['photo_consent'] && is_file(__DIR__ . '/uploads/people/' . $g['person_photo']);
+    $showG = $g['grave_photo'] && is_file(__DIR__ . '/uploads/graves/' . $g['grave_photo']);
+    $hasPin = $g['lat'] !== null && $g['lng'] !== null;
+    $initial = mb_strtoupper(mb_substr(preg_replace('/^(U|Daw|Ko|Ma|Mg|Maung)\s+/i', '', $g['name_en']), 0, 1));
 }
 ?>
 <!doctype html>
@@ -46,8 +59,13 @@ if ($g) {
     </nav>
     <a class="back" href="/<?= $lang ?>/">&larr; <?= t('home') ?></a>
     <?php if ($g): ?>
-      <h1 class="ti"><?= htmlspecialchars($title) ?></h1>
-      <?php if ($sub): ?><p class="su"><?= htmlspecialchars($sub) ?></p><?php endif; ?>
+      <div class="who">
+        <?php if ($showP): ?><img class="avatar" src="/uploads/people/<?= htmlspecialchars($g['person_photo']) ?>" alt="<?= htmlspecialchars($title) ?>"><?php else: ?><span class="avatar avatar-i" aria-hidden="true"><?= htmlspecialchars($initial) ?></span><?php endif; ?>
+        <div>
+          <h1 class="ti" style="margin:0"><?= htmlspecialchars($title) ?></h1>
+          <?php if ($sub): ?><p class="su"><?= htmlspecialchars($sub) ?></p><?php endif; ?>
+        </div>
+      </div>
     <?php else: ?>
       <h1 class="ti"><?= t('grave_not_found') ?></h1>
     <?php endif; ?>
@@ -56,10 +74,6 @@ if ($g) {
 <main class="container">
 <?php if ($g): ?>
   <div class="card grave-card">
-    <div class="drow" style="justify-content:flex-start;padding:16px">
-      <?php $showP = $g['person_photo'] && $g['photo_consent'] && is_file(__DIR__ . '/uploads/people/' . $g['person_photo']); ?>
-      <?php if ($showP): ?><img class="avatar" src="/uploads/people/<?= htmlspecialchars($g['person_photo']) ?>" alt="<?= htmlspecialchars($title) ?>"><?php else: ?><span class="avatar avatar-i" aria-hidden="true"><?= htmlspecialchars(mb_strtoupper(mb_substr(preg_replace('/^(U|Daw|Ko|Ma|Mg|Maung)\s+/i', '', $g['name_en']), 0, 1))) ?></span><?php endif; ?>
-    </div>
     <?php if ($date): ?><div class="drow"><span><?= t('died') ?></span><b><?= htmlspecialchars($date) ?></b></div><?php endif; ?>
     <?php if ($g['hijri_date']): ?><div class="drow"><span><?= t('hijri') ?></span><b><?= htmlspecialchars($g['hijri_date']) ?></b></div><?php endif; ?>
     <div class="drow"><span><?= t('cemetery') ?></span><b><?= htmlspecialchars($cem) ?></b></div>
@@ -67,16 +81,19 @@ if ($g) {
     <div class="drow"><span><?= t('plot') ?></span><b><?= htmlspecialchars($g['plot']) ?></b></div>
     <?php if ($g['grave_no']): ?><div class="drow"><span><?= t('grave_no') ?></span><b><?= htmlspecialchars($g['grave_no']) ?></b></div><?php endif; ?>
   </div>
-<?php endif; ?>
-<?php if ($g): ?>
-<?php if ($g['grave_photo'] && is_file(__DIR__ . '/uploads/graves/' . $g['grave_photo'])): ?><img class="gphoto" src="/uploads/graves/<?= htmlspecialchars($g['grave_photo']) ?>" alt="<?= t('grave_photo_alt') ?>" loading="lazy"><?php endif; ?>
-<?php $dir = ($lang === 'my' && $g['directions_my']) ? $g['directions_my'] : ($g['directions_en'] ?? ''); ?>
-<?php if ($dir || $g['lat'] !== null): ?>
+  <?php if ($showG): ?>
+  <a class="card photo-card" href="/uploads/graves/<?= htmlspecialchars($g['grave_photo']) ?>" target="_blank" rel="noopener">
+    <img src="/uploads/graves/<?= htmlspecialchars($g['grave_photo']) ?>" alt="<?= t('grave_photo_alt') ?>" loading="lazy">
+    <span class="sm"><?= t('grave_photo_alt') ?></span>
+  </a>
+  <?php endif; ?>
+  <?php if ($dir || $hasPin): ?>
   <div class="card" style="margin:14px 20px 24px;padding:16px">
     <?php if ($dir): ?><h2 class="loc-h"><?= t('how_to_find') ?></h2><p class="loc-p"><?= nl2br(htmlspecialchars($dir)) ?></p><?php endif; ?>
-    <?php if ($g['lat'] !== null && $g['lng'] !== null): ?><a class="btn" style="text-align:center;line-height:54px;text-decoration:none;margin-top:0" href="https://www.google.com/maps/dir/?api=1&amp;destination=<?= htmlspecialchars($g['lat'] . ',' . $g['lng']) ?>" target="_blank" rel="noopener"><?= t('directions_button') ?></a><?php endif; ?>
+    <?php if ($hasPin): ?><a class="btn" style="text-align:center;line-height:54px;text-decoration:none;margin-top:0" href="https://www.google.com/maps/dir/?api=1&amp;destination=<?= htmlspecialchars($g['lat'] . ',' . $g['lng']) ?>" target="_blank" rel="noopener"><?= t('directions_button') ?></a><?php endif; ?>
   </div>
+  <?php endif; ?>
 <?php endif; ?>
-<?php endif; ?></main>
+</main>
 </body>
 </html>
