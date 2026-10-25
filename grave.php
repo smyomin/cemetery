@@ -58,7 +58,7 @@ if ($g) {
   <div class="card grave-card">
     <div class="drow" style="justify-content:flex-start;padding:16px">
       <?php $showP = $g['person_photo'] && $g['photo_consent'] && is_file(__DIR__ . '/uploads/people/' . $g['person_photo']); ?>
-      <?php if ($showP): ?><img class="avatar" src="/uploads/people/<?= htmlspecialchars($g['person_photo']) ?>" alt="<?= htmlspecialchars($title) ?>"><?php else: ?><span class="avatar avatar-i" aria-hidden="true"><?= htmlspecialchars(mb_strtoupper(mb_substr($g['name_en'], 0, 1))) ?></span><?php endif; ?>
+      <?php if ($showP): ?><img class="avatar" src="/uploads/people/<?= htmlspecialchars($g['person_photo']) ?>" alt="<?= htmlspecialchars($title) ?>"><?php else: ?><span class="avatar avatar-i" aria-hidden="true"><?= htmlspecialchars(mb_strtoupper(mb_substr(preg_replace('/^(U|Daw|Ko|Ma|Mg|Maung)\s+/i', '', $g['name_en']), 0, 1))) ?></span><?php endif; ?>
     </div>
     <?php if ($date): ?><div class="drow"><span><?= t('died') ?></span><b><?= htmlspecialchars($date) ?></b></div><?php endif; ?>
     <?php if ($g['hijri_date']): ?><div class="drow"><span><?= t('hijri') ?></span><b><?= htmlspecialchars($g['hijri_date']) ?></b></div><?php endif; ?>
