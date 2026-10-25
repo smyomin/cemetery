@@ -58,4 +58,5 @@ a{color:var(--green)}
 .loc-p{margin:0 0 14px}
 .avatar{width:72px;height:72px;border-radius:50%;object-fit:cover;display:block}
 .avatar-i{display:flex;align-items:center;justify-content:center;background:#E4F0EA;color:var(--green);font-weight:700;font-size:28px}
-.gphoto{display:block;width:calc(100% - 40px);margin:14px 20px 0;border-radius:14px}
+.gphoto{display:block;width:auto;max-width:calc(100% - 40px);max-height:300px;margin:14px auto 0;border-radius:14px}
+@media (min-width:768px){.gphoto{max-height:380px}}

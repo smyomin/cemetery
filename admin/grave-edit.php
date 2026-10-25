@@ -126,7 +126,7 @@ $cem = ($lang === 'my' && $g['cem_my']) ? $g['cem_my'] : $g['cem_en'];
 
     <label class="lbl" for="grave_photo"><?= t('grave_photo') ?></label>
     <?php if ($g['grave_photo']): ?>
-      <img class="gphoto" src="/uploads/graves/<?= htmlspecialchars($g['grave_photo']) ?>" alt="" style="width:100%;margin:0 0 8px">
+      <img class="gphoto" src="/uploads/graves/<?= htmlspecialchars($g['grave_photo']) ?>" alt="" style="margin:0 0 8px;max-height:160px;max-width:100%">
       <label style="display:flex;gap:10px;align-items:center;margin:0 0 10px;font-size:14px"><input type="checkbox" name="remove_grave_photo" value="1" style="width:22px;height:22px"> <?= t('remove_photo') ?></label>
     <?php endif; ?>
     <input class="in" id="grave_photo" name="grave_photo" type="file" accept="image/*" style="height:auto;padding:12px 16px">
