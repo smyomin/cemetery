@@ -54,3 +54,5 @@ a{color:var(--green)}
 .irow{min-height:64px;font-size:17px}
 .page{padding:28px}
 }
+.loc-h{margin:0 0 6px;font-size:16px}
+.loc-p{margin:0 0 14px}

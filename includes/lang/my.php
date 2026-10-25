@@ -20,4 +20,5 @@ return [
     'hijri' => 'ဟိဂျ်ရီ',
     'cemetery' => 'သင်္ချိုင်း',
     'grave_not_found' => 'ဤဂူကို ရှာမတွေ့ပါ။',
-    'grave_no' => 'ဂူနံပါတ်',];
+    'grave_no' => 'ဂူနံပါတ်',    'how_to_find' => 'ဤဂူကို ရှာဖွေနည်း',
+    'directions_button' => 'လမ်းညွှန်ရယူရန်',];

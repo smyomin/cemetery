@@ -4,8 +4,8 @@ require __DIR__ . '/includes/lang.php';
 
 $id = (int)($_GET['id'] ?? 0);
 $stmt = $pdo->prepare(
-    'SELECT g.*, m.name_en AS cemetery_en, m.name_my AS cemetery_my
-     FROM graves g JOIN cemeteries m ON m.id = g.cemetery_id
+    'SELECT g.*, m.name_en AS cemetery_en, m.name_my AS cemetery_my, s.directions_en, s.directions_my, COALESCE(s.lat, m.lat) AS lat, COALESCE(s.lng, m.lng) AS lng
+     FROM graves g JOIN cemeteries m ON m.id = g.cemetery_id LEFT JOIN sections s ON s.cemetery_id = g.cemetery_id AND s.code = g.section
      WHERE g.id = :id'
 );
 $stmt->execute([':id' => $id]);
@@ -64,6 +64,14 @@ if ($g) {
     <?php if ($g['grave_no']): ?><div class="drow"><span><?= t('grave_no') ?></span><b><?= htmlspecialchars($g['grave_no']) ?></b></div><?php endif; ?>
   </div>
 <?php endif; ?>
-</main>
+<?php if ($g): ?>
+<?php $dir = ($lang === 'my' && $g['directions_my']) ? $g['directions_my'] : ($g['directions_en'] ?? ''); ?>
+<?php if ($dir || $g['lat'] !== null): ?>
+  <div class="card" style="margin:14px 20px 24px;padding:16px">
+    <?php if ($dir): ?><h2 class="loc-h"><?= t('how_to_find') ?></h2><p class="loc-p"><?= nl2br(htmlspecialchars($dir)) ?></p><?php endif; ?>
+    <?php if ($g['lat'] !== null && $g['lng'] !== null): ?><a class="btn" style="text-align:center;line-height:54px;text-decoration:none;margin-top:0" href="https://www.google.com/maps/dir/?api=1&amp;destination=<?= htmlspecialchars($g['lat'] . ',' . $g['lng']) ?>" target="_blank" rel="noopener"><?= t('directions_button') ?></a><?php endif; ?>
+  </div>
+<?php endif; ?>
+<?php endif; ?></main>
 </body>
 </html>

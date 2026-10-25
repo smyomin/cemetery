@@ -100,6 +100,10 @@ document.getElementById('loc').addEventListener('click', function () {
     document.getElementById('lng').value = p.coords.longitude.toFixed(6);
   });
 });
+document.getElementById('lat').addEventListener('input', function () {
+  var m = this.value.match(/^\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*$/);
+  if (m) { this.value = m[1]; document.getElementById('lng').value = m[2]; }
+});
 </script>
 </body>
 </html>

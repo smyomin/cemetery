@@ -20,4 +20,5 @@ return [
     'hijri' => 'Hijri',
     'cemetery' => 'Cemetery',
     'grave_not_found' => 'This grave could not be found.',
-    'grave_no' => 'Grave number',];
+    'grave_no' => 'Grave number',    'how_to_find' => 'How to find this grave',
+    'directions_button' => 'Directions',];

@@ -37,7 +37,7 @@ return [
     'latitude' => 'Latitude',
     'longitude' => 'Longitude',
     'use_location' => 'Use my current location',
-    'gps_hint' => 'Stand in the block and tap the button, or type the numbers.',
+    'gps_hint' => 'Stand in the block and tap the button, or paste both numbers from Google Maps into Latitude.',
     'err_gps' => 'Latitude and longitude must be valid numbers, or both empty.',
     'err_long' => 'The directions text is too long (up to 1000 characters).',
     'no_blocks' => 'No blocks yet. They appear when you add a burial.',
