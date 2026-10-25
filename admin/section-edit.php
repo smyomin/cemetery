@@ -100,8 +100,23 @@ document.getElementById('loc').addEventListener('click', function () {
     document.getElementById('lng').value = p.coords.longitude.toFixed(6);
   });
 });
+function parseCoords(s) {
+  var n = '(-?\\d+(?:\\.\\d+)?)';
+  var res = [
+    new RegExp('^\\s*' + n + '\\s*,\\s*' + n + '\\s*$'),
+    new RegExp('!3d' + n + '!4d' + n),
+    new RegExp('@' + n + ',' + n),
+    new RegExp('[?&](?:q|ll|query)=' + n + '(?:,|%2C)\\+?' + n),
+    new RegExp('/search/' + n + ',\\+?' + n)
+  ];
+  for (var i = 0; i < res.length; i++) {
+    var m = s.match(res[i]);
+    if (m) { return [m[1], m[2]]; }
+  }
+  return null;
+}
 document.getElementById('lat').addEventListener('input', function () {
-  var m = this.value.match(/^\s*(-?\d+(?:\.\d+)?)\s*,\s*(-?\d+(?:\.\d+)?)\s*$/);
+  var c = parseCoords(this.value); var m = c ? [null, c[0], c[1]] : null;
   if (m) { this.value = m[1]; document.getElementById('lng').value = m[2]; }
 });
 </script>
