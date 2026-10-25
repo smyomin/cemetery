@@ -5,6 +5,7 @@ function save_photo(array $f, string $sub): array {
     $info = @getimagesize($f['tmp_name']);
     $types = [IMAGETYPE_JPEG => 'imagecreatefromjpeg', IMAGETYPE_PNG => 'imagecreatefrompng', IMAGETYPE_WEBP => 'imagecreatefromwebp'];
     if (!$info || !isset($types[$info[2]]) || !function_exists($types[$info[2]])) { return [null, 'err_photo']; }
+    if ($info[0] * $info[1] > 40000000) { return [null, 'err_photo']; }
     $make = $types[$info[2]];
     $img = @$make($f['tmp_name']);
     if (!$img) { return [null, 'err_photo']; }
