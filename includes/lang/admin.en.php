@@ -47,4 +47,7 @@ return [
     'photo_consent' => 'The family agreed to show the photo of the person online',
     'err_photo' => 'The burial was saved, but a photo could not be used. Use a JPG, PNG or WebP image under 8 MB.',    'remove_photo' => 'Remove this photo',    'delete_burial' => 'Delete this burial',
     'confirm_delete' => 'Delete this burial permanently? This cannot be undone.',
-    'deleted' => 'Burial deleted.',];
+    'deleted' => 'Burial deleted.',    'qr_title' => 'QR code for this record',
+    'qr_hint' => 'Scanning it opens the public page for this burial.',
+    'qr_share' => 'Share QR code',
+    'qr_download' => 'Download QR image',];

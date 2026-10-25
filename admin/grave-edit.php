@@ -1,6 +1,7 @@
 <?php
 require __DIR__ . '/../includes/auth.php';
 require __DIR__ . '/../includes/lang.php';
+require __DIR__ . '/../includes/qr.php';
 require __DIR__ . '/../includes/photo.php';
 $admin = require_admin();
 
@@ -133,6 +134,7 @@ $cem = ($lang === 'my' && $g['cem_my']) ? $g['cem_my'] : $g['cem_en'];
 
     <button class="btn" type="submit"><?= t('save_changes') ?></button>
   </form>
+  <?php qr_block($id); ?>
   <form class="card" method="post" action="/admin/grave-delete.php" style="margin:14px 20px 24px;padding:16px" onsubmit="return confirm(<?= htmlspecialchars(json_encode($STRINGS['confirm_delete']), ENT_QUOTES) ?>)">
     <input type="hidden" name="csrf" value="<?= htmlspecialchars(csrf_token()) ?>">
     <input type="hidden" name="id" value="<?= $id ?>">

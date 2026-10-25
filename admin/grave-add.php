@@ -1,6 +1,7 @@
 <?php
 require __DIR__ . '/../includes/auth.php';
 require __DIR__ . '/../includes/lang.php';
+require __DIR__ . '/../includes/qr.php';
 require __DIR__ . '/../includes/photo.php';
 $admin = require_admin();
 
@@ -124,6 +125,7 @@ $savedId = (int)($_GET['saved'] ?? 0);
 
     <button class="btn" type="submit"><?= t('save_burial') ?></button>
   </form>
+  <?php if ($savedId) { qr_block($savedId); } ?>
 </main>
 </body>
 </html>
