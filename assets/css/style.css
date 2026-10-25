@@ -65,3 +65,9 @@ a{color:var(--green)}
 .hero .avatar-i{background:#fff}
 .photo-card{display:block;margin:14px 20px 0;padding:12px;text-align:center;text-decoration:none;color:var(--muted)}
 .photo-card img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;object-position:center 40%;margin:0 0 8px;border-radius:10px}
+.hero{position:relative;isolation:isolate;overflow:hidden}
+.hero::before{content:"";position:absolute;inset:0;z-index:-2;background:url(/assets/img/gate-banner.jpg) 70% 40%/cover no-repeat}
+.hero::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,rgba(15,76,58,.94) 0%,rgba(15,76,58,.82) 45%,rgba(15,76,58,.60) 100%)}
+.hero .container{position:relative}
+.ti{text-shadow:0 1px 3px rgba(0,0,0,.25)}
+main{position:relative;z-index:2}
