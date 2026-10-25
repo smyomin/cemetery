@@ -1,6 +1,6 @@
 <?php
 function qr_block(int $id): void {
-    $url = SITE_URL . '/g/' . $id;
+    $url = 'https://' . $_SERVER['HTTP_HOST'] . '/g/' . $id;
     ?>
 <div class="card" style="margin:14px 20px 0;padding:16px;text-align:center">
   <h2 class="loc-h"><?= t('qr_title') ?></h2>
