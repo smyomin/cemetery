@@ -56,6 +56,10 @@ if ($g) {
 <main class="container">
 <?php if ($g): ?>
   <div class="card grave-card">
+    <div class="drow" style="justify-content:flex-start;padding:16px">
+      <?php $showP = $g['person_photo'] && $g['photo_consent'] && is_file(__DIR__ . '/uploads/people/' . $g['person_photo']); ?>
+      <?php if ($showP): ?><img class="avatar" src="/uploads/people/<?= htmlspecialchars($g['person_photo']) ?>" alt="<?= htmlspecialchars($title) ?>"><?php else: ?><span class="avatar avatar-i" aria-hidden="true"><?= htmlspecialchars(mb_strtoupper(mb_substr($g['name_en'], 0, 1))) ?></span><?php endif; ?>
+    </div>
     <?php if ($date): ?><div class="drow"><span><?= t('died') ?></span><b><?= htmlspecialchars($date) ?></b></div><?php endif; ?>
     <?php if ($g['hijri_date']): ?><div class="drow"><span><?= t('hijri') ?></span><b><?= htmlspecialchars($g['hijri_date']) ?></b></div><?php endif; ?>
     <div class="drow"><span><?= t('cemetery') ?></span><b><?= htmlspecialchars($cem) ?></b></div>
@@ -65,6 +69,7 @@ if ($g) {
   </div>
 <?php endif; ?>
 <?php if ($g): ?>
+<?php if ($g['grave_photo'] && is_file(__DIR__ . '/uploads/graves/' . $g['grave_photo'])): ?><img class="gphoto" src="/uploads/graves/<?= htmlspecialchars($g['grave_photo']) ?>" alt="<?= t('grave_photo_alt') ?>" loading="lazy"><?php endif; ?>
 <?php $dir = ($lang === 'my' && $g['directions_my']) ? $g['directions_my'] : ($g['directions_en'] ?? ''); ?>
 <?php if ($dir || $g['lat'] !== null): ?>
   <div class="card" style="margin:14px 20px 24px;padding:16px">

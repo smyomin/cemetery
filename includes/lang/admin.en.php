@@ -42,4 +42,7 @@ return [
     'err_long' => 'The directions text is too long (up to 1000 characters).',
     'no_blocks' => 'No blocks yet. They appear when you add a burial.',
     'has_pin' => 'GPS saved',
-    'no_pin' => 'No GPS yet',];
+    'no_pin' => 'No GPS yet',    'person_photo' => 'Photo of the person (optional)',
+    'grave_photo' => 'Photo of the grave (optional)',
+    'photo_consent' => 'The family agreed to show the photo of the person online',
+    'err_photo' => 'The burial was saved, but a photo could not be used. Use a JPG, PNG or WebP image under 8 MB.',];

@@ -21,4 +21,4 @@ return [
     'cemetery' => 'Cemetery',
     'grave_not_found' => 'This grave could not be found.',
     'grave_no' => 'Grave number',    'how_to_find' => 'How to find this grave',
-    'directions_button' => 'Directions',];
+    'directions_button' => 'Directions',    'grave_photo_alt' => 'Photo of the grave',];

@@ -1,6 +1,7 @@
 <?php
 require __DIR__ . '/../includes/auth.php';
 require __DIR__ . '/../includes/lang.php';
+require __DIR__ . '/../includes/photo.php';
 $admin = require_admin();
 
 $cems = $pdo->query('SELECT id, name_en, name_my FROM cemeteries ORDER BY name_en')->fetchAll();
@@ -47,8 +48,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':g' => $v['grave_no'] === '' ? null : $v['grave_no'],
         ]);
         $newId = $pdo->lastInsertId();
+        $consent = isset($_POST['photo_consent']) ? 1 : 0;
+        [$pp, $e1] = save_photo($_FILES['person_photo'] ?? ['error' => UPLOAD_ERR_NO_FILE], 'people');
+        [$gp, $e2] = save_photo($_FILES['grave_photo'] ?? ['error' => UPLOAD_ERR_NO_FILE], 'graves');
+        $pdo->prepare('UPDATE graves SET person_photo = :pp, grave_photo = :gp, photo_consent = :pc WHERE id = :id')->execute([':pp' => $pp, ':gp' => $gp, ':pc' => $consent, ':id' => $newId]);
+        $q = ($e1 || $e2) ? '&photoerr=1' : '';
         $pdo->prepare('INSERT IGNORE INTO sections (cemetery_id, code) VALUES (:c, :s)')->execute([':c' => $v['cemetery_id'], ':s' => $v['section']]);
-        header('Location: /admin/grave-add.php?saved=' . $newId);
+        header('Location: /admin/grave-add.php?saved=' . $newId . $q);
         exit;
     }
 }
@@ -76,9 +82,10 @@ $savedId = (int)($_GET['saved'] ?? 0);
   </div>
 </header>
 <main class="container">
-  <form class="card search-card" method="post" action="/admin/grave-add.php">
+  <form class="card search-card" method="post" action="/admin/grave-add.php" enctype="multipart/form-data">
     <input type="hidden" name="csrf" value="<?= htmlspecialchars(csrf_token()) ?>">
     <?php if ($savedId): ?><p class="ok"><?= t('saved') ?> <a href="/<?= $lang ?>/grave/<?= $savedId ?>"><?= t('view_grave') ?></a></p><?php endif; ?>
+    <?php if (isset($_GET['photoerr'])): ?><p class="err"><?= t('err_photo') ?></p><?php endif; ?>
     <?php if ($err): ?><p class="err"><?= t($err) ?></p><?php endif; ?>
 
     <label class="lbl" for="cemetery_id"><?= t('cemetery') ?></label>
@@ -108,6 +115,13 @@ $savedId = (int)($_GET['saved'] ?? 0);
 
         <label class="lbl" for="grave_no"><?= t('grave_no') ?></label>
     <input class="in" id="grave_no" name="grave_no" value="<?= htmlspecialchars($v['grave_no']) ?>" maxlength="20">
+    <label class="lbl" for="person_photo"><?= t('person_photo') ?></label>
+    <input class="in" id="person_photo" name="person_photo" type="file" accept="image/*" style="height:auto;padding:12px 16px">
+    <label style="display:flex;gap:10px;align-items:flex-start;margin-top:10px;font-size:14px"><input type="checkbox" name="photo_consent" value="1" style="width:22px;height:22px;flex:none"> <span><?= t('photo_consent') ?></span></label>
+
+    <label class="lbl" for="grave_photo"><?= t('grave_photo') ?></label>
+    <input class="in" id="grave_photo" name="grave_photo" type="file" accept="image/*" style="height:auto;padding:12px 16px">
+
     <button class="btn" type="submit"><?= t('save_burial') ?></button>
   </form>
 </main>
