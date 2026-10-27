@@ -105,4 +105,13 @@ return [
     'act_city.create' => 'Added a city',
     'act_city.update' => 'Edited a city',
     'act_cemetery.create' => 'Added a cemetery',
-    'act_cemetery.update' => 'Edited a cemetery',];
+    'act_cemetery.update' => 'Edited a cemetery',    'add_block' => 'Add a block',
+    'block_code' => 'Block letter or number (up to 10 characters)',
+    'err_code' => 'Enter the block letter or number (up to 10 characters).',
+    'err_code_taken' => 'This block already exists in this cemetery.',
+    'block_in_use' => 'This block has %d burials, so it cannot be deleted.',
+    'delete_block' => 'Delete this block',
+    'confirm_delete_block' => 'Delete this block? This cannot be undone.',
+    'block_deleted' => 'Block deleted.',
+    'act_block.create' => 'Added a block',
+    'act_block.delete' => 'Deleted a block',];

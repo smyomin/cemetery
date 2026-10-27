@@ -47,6 +47,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 $cem = ($lang === 'my' && $s['cem_my']) ? $s['cem_my'] : $s['cem_en'];
+$nq = $pdo->prepare('SELECT COUNT(*) FROM graves WHERE cemetery_id = :c AND section = :k');
+$nq->execute([':c' => (int)$s['cemetery_id'], ':k' => $s['code']]);
+$n = (int)$nq->fetchColumn();
 ?>
 <!doctype html>
 <html lang="<?= $lang ?>">
@@ -93,6 +96,15 @@ $cem = ($lang === 'my' && $s['cem_my']) ? $s['cem_my'] : $s['cem_en'];
 
     <button class="btn" type="submit"><?= t('save_changes') ?></button>
   </form>
+<?php if ($n === 0): ?>
+  <form class="card" method="post" action="/admin/section-delete.php" style="margin:14px 20px 24px;padding:16px" onsubmit="return confirm(<?= htmlspecialchars(json_encode($STRINGS['confirm_delete_block']), ENT_QUOTES) ?>)">
+    <input type="hidden" name="csrf" value="<?= htmlspecialchars(csrf_token()) ?>">
+    <input type="hidden" name="id" value="<?= $id ?>">
+    <button class="btn" type="submit" style="margin-top:0;background:#8A2D22"><?= t('delete_block') ?></button>
+  </form>
+<?php else: ?>
+  <p class="sm" style="margin:14px 20px 24px"><?= tf('block_in_use', $n) ?></p>
+<?php endif; ?>
 </main>
 <script>
 document.getElementById('loc').addEventListener('click', function () {
