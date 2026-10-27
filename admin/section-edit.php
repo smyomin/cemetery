@@ -2,6 +2,7 @@
 require __DIR__ . '/../includes/auth.php';
 require __DIR__ . '/../includes/lang.php';
 $admin = require_admin();
+require_can('block.edit');
 
 $id = (int)($_GET['id'] ?? 0);
 $stmt = $pdo->prepare('SELECT s.*, m.name_en AS cem_en, m.name_my AS cem_my FROM sections s JOIN cemeteries m ON m.id = s.cemetery_id WHERE s.id = :id');

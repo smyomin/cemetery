@@ -3,6 +3,7 @@ require __DIR__ . '/../includes/auth.php';
 require __DIR__ . '/../includes/lang.php';
 require __DIR__ . '/../includes/photo.php';
 $admin = require_admin();
+require_can('burial.delete');
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST' || !csrf_check()) {
     header('Location: /admin/graves.php');

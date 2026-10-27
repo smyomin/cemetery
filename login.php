@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $pass = $_POST['password'] ?? '';
     $row = false;
     if (csrf_check() && $user !== '') {
-        $stmt = $pdo->prepare('SELECT id, username, password_hash, cemetery_id FROM admins WHERE username = :u');
+        $stmt = $pdo->prepare('SELECT id, username, password_hash, cemetery_id FROM admins WHERE username = :u AND active = 1');
         $stmt->execute([':u' => $user]);
         $row = $stmt->fetch();
     }

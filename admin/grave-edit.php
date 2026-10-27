@@ -4,6 +4,7 @@ require __DIR__ . '/../includes/lang.php';
 require __DIR__ . '/../includes/qr.php';
 require __DIR__ . '/../includes/photo.php';
 $admin = require_admin();
+require_can('burial.edit');
 
 $id = (int)($_GET['id'] ?? 0);
 $stmt = $pdo->prepare('SELECT g.*, m.name_en AS cem_en, m.name_my AS cem_my FROM graves g JOIN cemeteries m ON m.id = g.cemetery_id WHERE g.id = :id');
@@ -135,7 +136,7 @@ $cem = ($lang === 'my' && $g['cem_my']) ? $g['cem_my'] : $g['cem_en'];
     <button class="btn" type="submit"><?= t('save_changes') ?></button>
   </form>
   <?php qr_block($id); ?>
-  <form class="card" method="post" action="/admin/grave-delete.php" style="margin:14px 20px 24px;padding:16px" onsubmit="return confirm(<?= htmlspecialchars(json_encode($STRINGS['confirm_delete']), ENT_QUOTES) ?>)">
+  <form class="card" method="post" action="/admin/grave-delete.php"<?= can('burial.delete') ? '' : ' hidden' ?> style="margin:14px 20px 24px;padding:16px" onsubmit="return confirm(<?= htmlspecialchars(json_encode($STRINGS['confirm_delete']), ENT_QUOTES) ?>)">
     <input type="hidden" name="csrf" value="<?= htmlspecialchars(csrf_token()) ?>">
     <input type="hidden" name="id" value="<?= $id ?>">
     <button class="btn" type="submit" style="margin-top:0;background:#8A2D22"><?= t('delete_burial') ?></button>

@@ -4,6 +4,7 @@ require __DIR__ . '/../includes/lang.php';
 require __DIR__ . '/../includes/qr.php';
 require __DIR__ . '/../includes/photo.php';
 $admin = require_admin();
+require_can('burial.create');
 
 $cems = $pdo->query('SELECT id, name_en, name_my FROM cemeteries ORDER BY name_en')->fetchAll();
 if ($admin['cemetery_id'] !== null) {
