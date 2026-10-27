@@ -2,6 +2,42 @@
 require __DIR__ . '/../includes/auth.php';
 require __DIR__ . '/../includes/lang.php';
 $admin = require_admin();
+
+$cemName = '';
+if ($admin['cemetery_id'] !== null) {
+    $s = $pdo->prepare('SELECT name_en, name_my FROM cemeteries WHERE id = :id');
+    $s->execute([':id' => $admin['cemetery_id']]);
+    $c = $s->fetch();
+    if ($c) { $cemName = ($lang === 'my' && $c['name_my']) ? $c['name_my'] : $c['name_en']; }
+}
+$scopeHtml = $cemName !== '' ? htmlspecialchars($cemName) : t('all_cemeteries');
+if ($admin['cemetery_id'] !== null) {
+    $q = $pdo->prepare('SELECT COUNT(*) FROM graves WHERE cemetery_id = :c');
+    $q->execute([':c' => $admin['cemetery_id']]);
+    $count = (int)$q->fetchColumn();
+} else {
+    $count = (int)$pdo->query('SELECT COUNT(*) FROM graves')->fetchColumn();
+}
+
+$groups = [
+    ['menu_burials', [
+        [can('burial.create'), '/admin/grave-add.php', 'add_burial'],
+        [true, '/admin/graves.php', 'burial_list'],
+    ]],
+    ['menu_setup', [
+        [can('block.edit'), '/admin/sections.php', 'blocks'],
+        [can('admin.manage'), '/admin/cemeteries.php', 'cemeteries'],
+        [can('admin.manage'), '/admin/cities.php', 'cities'],
+    ]],
+    ['menu_people', [
+        [can('admin.manage'), '/admin/admins.php', 'admins'],
+        [can('admin.manage'), '/admin/activity.php', 'activity'],
+    ]],
+    ['menu_account', [
+        [true, '/admin/password.php', 'pw_change'],
+        [true, '/logout.php', 'logout'],
+    ]],
+];
 ?>
 <!doctype html>
 <html lang="<?= $lang ?>">
@@ -14,7 +50,7 @@ $admin = require_admin();
   <link rel="stylesheet" href="/assets/css/style.css?v=<?= filemtime(__DIR__ . '/../assets/css/style.css') ?>">
 </head>
 <body>
-<header class="hero">
+<header class="hero hero-sm">
   <div class="container">
     <nav class="top tg" aria-label="Language">
       <a href="/admin/?lang=en"<?= $lang === 'en' ? ' class="on"' : '' ?>>EN</a>
@@ -22,19 +58,20 @@ $admin = require_admin();
     </nav>
     <h1 class="ti"><?= t('admin') ?></h1>
     <p class="su"><?= tf('logged_in_as', $admin['username']) ?></p>
+    <p class="su" style="margin-top:2px"><?= t('role_' . $admin['role']) ?> &middot; <?= $scopeHtml ?> &middot; <?= tf('burial_n', $count) ?></p>
   </div>
 </header>
 <main class="container">
-  <div class="card search-card">
-    <a class="btn" href="/admin/grave-add.php" style="text-align:center;line-height:54px;text-decoration:none;margin:0 0 12px"><?= t('add_burial') ?></a>
-    <a class="btn" href="/admin/graves.php" style="text-align:center;line-height:54px;text-decoration:none;margin:0 0 12px"><?= t('burial_list') ?></a>
-    <?php if (can('block.edit')): ?><a class="btn" href="/admin/sections.php" style="text-align:center;line-height:54px;text-decoration:none;margin:0 0 12px"><?= t('blocks') ?></a><?php endif; ?>
-    <?php if (can('admin.manage')): ?><a class="btn" href="/admin/admins.php" style="text-align:center;line-height:54px;text-decoration:none;margin:0 0 12px"><?= t('admins') ?></a><?php endif; ?>
-    <?php if (can('admin.manage')): ?><a class="btn" href="/admin/cemeteries.php" style="text-align:center;line-height:54px;text-decoration:none;margin:0 0 12px"><?= t('cemeteries') ?></a><a class="btn" href="/admin/cities.php" style="text-align:center;line-height:54px;text-decoration:none;margin:0 0 12px"><?= t('cities') ?></a><?php endif; ?>
-    <?php if (can('admin.manage')): ?><a class="btn" href="/admin/activity.php" style="text-align:center;line-height:54px;text-decoration:none;margin:0 0 12px"><?= t('activity') ?></a><?php endif; ?>
-    <a class="btn" href="/admin/password.php" style="text-align:center;line-height:54px;text-decoration:none;margin:0 0 12px"><?= t('pw_change') ?></a>
-    <a class="btn" href="/logout.php" style="text-align:center;line-height:54px;text-decoration:none"><?= t('logout') ?></a>
+<?php foreach ($groups as [$heading, $items]): ?>
+  <?php $shown = array_filter($items, fn($i) => $i[0]); ?>
+  <?php if (!$shown) { continue; } ?>
+  <h2 class="sec"><?= t($heading) ?></h2>
+  <div class="card list-card">
+  <?php foreach ($shown as [, $href, $label]): ?>
+    <a class="irow" href="<?= $href ?>"><?= t($label) ?><span>&rsaquo;</span></a>
+  <?php endforeach; ?>
   </div>
+<?php endforeach; ?>
 </main>
 </body>
 </html>

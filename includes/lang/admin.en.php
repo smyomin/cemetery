@@ -114,4 +114,7 @@ return [
     'confirm_delete_block' => 'Delete this block? This cannot be undone.',
     'block_deleted' => 'Block deleted.',
     'act_block.create' => 'Added a block',
-    'act_block.delete' => 'Deleted a block',];
+    'act_block.delete' => 'Deleted a block',    'menu_burials' => 'Burials',
+    'menu_setup' => 'Cemetery setup',
+    'menu_people' => 'People and security',
+    'menu_account' => 'My account',];
