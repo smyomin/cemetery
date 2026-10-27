@@ -5,10 +5,16 @@ $admin = require_admin();
 require_can('admin.manage');
 
 $rows = $pdo->query(
-    'SELECT a.id, a.username, a.role, a.active, m.name_en AS cem_en, m.name_my AS cem_my
-     FROM admins a LEFT JOIN cemeteries m ON m.id = a.cemetery_id
+    'SELECT a.id, a.username, a.role, a.active,
+            GROUP_CONCAT(m.name_en ORDER BY m.name_en SEPARATOR ", ") AS cems_en,
+            GROUP_CONCAT(COALESCE(m.name_my, m.name_en) ORDER BY m.name_en SEPARATOR ", ") AS cems_my
+     FROM admins a
+     LEFT JOIN admin_cemeteries ac ON ac.admin_id = a.id
+     LEFT JOIN cemeteries m ON m.id = ac.cemetery_id
+     GROUP BY a.id
      ORDER BY a.active DESC, a.username'
 )->fetchAll();
+$pageTitle = t('admins');
 ?>
 <!doctype html>
 <html lang="<?= $lang ?>">
@@ -16,11 +22,10 @@ $rows = $pdo->query(
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex">
-  <title><?= t('admins') ?></title>
+  <title><?= $pageTitle ?></title>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700&family=Noto+Sans+Myanmar:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/style.css?v=<?= filemtime(__DIR__ . '/../assets/css/style.css') ?>">
-</head>
-<body>
+</head><body>
 <header class="hero hero-sm">
   <div class="container">
     <nav class="top tg" aria-label="Language">
@@ -38,7 +43,7 @@ $rows = $pdo->query(
     <a class="card res" href="/admin/admin-edit.php?id=<?= (int)$r['id'] ?>">
       <span class="grow">
         <b><?= htmlspecialchars($r['username']) ?><?= (int)$r['id'] === $admin['id'] ? ' (' . t('you') . ')' : '' ?></b><br>
-        <span class="sm"><?= t('role_' . $r['role']) ?> · <?= $r['role'] === 'super_admin' ? t('all_cemeteries') : htmlspecialchars(($lang === 'my' && $r['cem_my']) ? $r['cem_my'] : (string)$r['cem_en']) ?></span>
+        <span class="sm"><?= t('role_' . $r['role']) ?> &middot; <?= $r['role'] === 'super_admin' ? t('all_cemeteries') : htmlspecialchars((string)($lang === 'my' ? $r['cems_my'] : $r['cems_en'])) ?></span>
       </span>
       <?php if (!(int)$r['active']): ?><span class="yr"><?= t('inactive') ?></span><?php endif; ?>
     </a>

@@ -117,4 +117,6 @@ return [
     'act_block.delete' => 'Deleted a block',    'menu_burials' => 'Burials',
     'menu_setup' => 'Cemetery setup',
     'menu_people' => 'People and security',
-    'menu_account' => 'My account',];
+    'menu_account' => 'My account',    'assigned_cemeteries' => 'Cemeteries they can manage (tick one or more)',
+    'err_assign_many' => 'Choose at least one cemetery for this role.',
+    'err_save' => 'Could not save. Please try again.',];
