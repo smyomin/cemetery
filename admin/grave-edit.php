@@ -63,6 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         [$gp, $e2] = apply_photo('grave_photo', 'graves', $g['grave_photo'], isset($_POST['remove_grave_photo']));
         $pdo->prepare('UPDATE graves SET person_photo = :pp, grave_photo = :gp, photo_consent = :pc WHERE id = :id')->execute([':pp' => $pp, ':gp' => $gp, ':pc' => $consent, ':id' => $id]);
         $q = ($e1 || $e2) ? '&photoerr=1' : '';
+        log_activity($pdo, 'burial.update', 'burial', $id, (int)$g['cemetery_id'], $v['name_en']);
         header('Location: /admin/grave-edit.php?id=' . $id . '&updated=1' . $q);
         exit;
     }

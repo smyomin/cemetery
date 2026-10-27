@@ -19,6 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     if ($row && password_verify($pass, $row['password_hash'])) {
         session_regenerate_id(true);
+        log_activity($pdo, 'login', 'admin', (int)$row['id'], $row['cemetery_id'] === null ? null : (int)$row['cemetery_id'], $row['username'], ['id' => (int)$row['id'], 'username' => $row['username']]);
         $_SESSION['admin'] = [
             'id' => (int)$row['id'],
             'username' => $row['username'],

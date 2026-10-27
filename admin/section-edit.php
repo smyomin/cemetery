@@ -41,6 +41,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':lng' => $gpsGiven ? round((float)$v['lng'], 6) : null,
             ':id' => $id,
         ]);
+        log_activity($pdo, 'block.update', 'block', $id, (int)$s['cemetery_id'], $s['code']);
         header('Location: /admin/section-edit.php?id=' . $id . '&updated=1');
         exit;
     }

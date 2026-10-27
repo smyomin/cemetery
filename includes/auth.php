@@ -67,3 +67,12 @@ function grave_no_taken(PDO $pdo, int $cem, string $no, int $exceptId): bool {
     $s->execute([':c' => $cem, ':n' => $no, ':i' => $exceptId]);
     return (int)$s->fetchColumn() > 0;
 }
+function log_activity(PDO $pdo, string $action, string $type, ?int $id, ?int $cem, string $details = '', ?array $who = null): void {
+    global $CURRENT_ADMIN;
+    $who = $who ?? $CURRENT_ADMIN;
+    try {
+        $pdo->prepare('INSERT INTO activity_log (created_at, admin_id, admin_username, action, target_type, target_id, cemetery_id, details) VALUES (:ts, :a, :u, :act, :t, :tid, :c, :d)')
+            ->execute([':ts' => date('Y-m-d H:i:s'), ':a' => $who['id'] ?? null, ':u' => $who['username'] ?? '?', ':act' => $action, ':t' => $type, ':tid' => $id, ':c' => $cem, ':d' => mb_substr($details, 0, 255)]);
+    } catch (Throwable $e) {
+    }
+}

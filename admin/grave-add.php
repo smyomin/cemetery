@@ -50,6 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             ':g' => $v['grave_no'] === '' ? null : $v['grave_no'],
         ]);
         $newId = $pdo->lastInsertId();
+        log_activity($pdo, 'burial.create', 'burial', (int)$newId, $v['cemetery_id'], $v['name_en']);
         $consent = isset($_POST['photo_consent']) ? 1 : 0;
         [$pp, $e1] = save_photo($_FILES['person_photo'] ?? ['error' => UPLOAD_ERR_NO_FILE], 'people');
         [$gp, $e2] = save_photo($_FILES['grave_photo'] ?? ['error' => UPLOAD_ERR_NO_FILE], 'graves');

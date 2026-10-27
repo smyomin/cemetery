@@ -77,4 +77,13 @@ return [
     'pw_confirm' => 'Repeat the new password',
     'pw_changed' => 'Password changed.',
     'err_pw_current' => 'The current password is wrong.',
-    'err_pw_match' => 'The two new passwords do not match.',];
+    'err_pw_match' => 'The two new passwords do not match.',    'activity' => 'Activity log',
+    'no_activity' => 'No activity yet.',
+    'act_login' => 'Logged in',
+    'act_burial.create' => 'Added a burial',
+    'act_burial.update' => 'Edited a burial',
+    'act_burial.delete' => 'Deleted a burial',
+    'act_block.update' => 'Edited a block',
+    'act_admin.create' => 'Added an admin',
+    'act_admin.update' => 'Edited an admin',
+    'act_password.change' => 'Changed own password',];

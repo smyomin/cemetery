@@ -57,13 +57,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (!$row) {
             $i = $pdo->prepare('INSERT INTO admins (cemetery_id, username, password_hash, role, active) VALUES (:c, :u, :h, :r, :a)');
             $i->execute([':c' => $cem, ':u' => $v['username'], ':h' => password_hash($pw, PASSWORD_DEFAULT), ':r' => $v['role'], ':a' => $v['active']]);
-            header('Location: /admin/admin-edit.php?id=' . $pdo->lastInsertId() . '&saved=1');
+            $newAdmin = (int)$pdo->lastInsertId();
+            log_activity($pdo, 'admin.create', 'admin', $newAdmin, $cem, $v['username'] . ' (' . $v['role'] . ')');
+            header('Location: /admin/admin-edit.php?id=' . $newAdmin . '&saved=1');
             exit;
         }
         $sql = 'UPDATE admins SET role = :r, cemetery_id = :c, active = :a' . ($pw !== '' ? ', password_hash = :h' : '') . ' WHERE id = :id';
         $p = [':r' => $v['role'], ':c' => $cem, ':a' => $v['active'], ':id' => $id];
         if ($pw !== '') { $p[':h'] = password_hash($pw, PASSWORD_DEFAULT); }
         $pdo->prepare($sql)->execute($p);
+        log_activity($pdo, 'admin.update', 'admin', $id, $cem, $v['username'] . ' (' . $v['role'] . ')' . ($pw !== '' ? ' + new password' : '') . ($v['active'] ? '' : ' [deactivated]'));
         header('Location: /admin/admin-edit.php?id=' . $id . '&saved=1');
         exit;
     }

@@ -24,6 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $pdo->prepare('UPDATE admins SET password_hash = :h WHERE id = :id')
             ->execute([':h' => password_hash($new, PASSWORD_DEFAULT), ':id' => $admin['id']]);
         session_regenerate_id(true);
+        log_activity($pdo, 'password.change', 'admin', $admin['id'], $admin['cemetery_id'], $admin['username']);
         header('Location: /admin/password.php?done=1');
         exit;
     }
