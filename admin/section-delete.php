@@ -12,7 +12,7 @@ $id = (int)($_POST['id'] ?? 0);
 $st = $pdo->prepare('SELECT id, cemetery_id, code FROM sections WHERE id = :id');
 $st->execute([':id' => $id]);
 $s = $st->fetch();
-if ($s && ($admin['cemetery_id'] === null || (int)$s['cemetery_id'] === $admin['cemetery_id'])) {
+if ($s && can_access_cemetery((int)$s['cemetery_id'])) {
     $nq = $pdo->prepare('SELECT COUNT(*) FROM graves WHERE cemetery_id = :c AND section = :k');
     $nq->execute([':c' => (int)$s['cemetery_id'], ':k' => $s['code']]);
     if ((int)$nq->fetchColumn() === 0) {

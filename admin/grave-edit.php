@@ -10,7 +10,7 @@ $id = (int)($_GET['id'] ?? 0);
 $stmt = $pdo->prepare('SELECT g.*, m.name_en AS cem_en, m.name_my AS cem_my FROM graves g JOIN cemeteries m ON m.id = g.cemetery_id WHERE g.id = :id');
 $stmt->execute([':id' => $id]);
 $g = $stmt->fetch();
-if (!$g || ($admin['cemetery_id'] !== null && (int)$g['cemetery_id'] !== $admin['cemetery_id'])) {
+if (!$g || !can_access_cemetery((int)$g['cemetery_id'])) {
     http_response_code(404);
     exit(t('not_found'));
 }

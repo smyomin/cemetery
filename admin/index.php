@@ -3,21 +3,21 @@ require __DIR__ . '/../includes/auth.php';
 require __DIR__ . '/../includes/lang.php';
 $admin = require_admin();
 
-$cemName = '';
-if ($admin['cemetery_id'] !== null) {
-    $s = $pdo->prepare('SELECT name_en, name_my FROM cemeteries WHERE id = :id');
-    $s->execute([':id' => $admin['cemetery_id']]);
-    $c = $s->fetch();
-    if ($c) { $cemName = ($lang === 'my' && $c['name_my']) ? $c['name_my'] : $c['name_en']; }
+$scopeHtml = t('all_cemeteries');
+if (admin_cemetery_ids() !== null) {
+    $params = [];
+    $q = $pdo->prepare('SELECT name_en, name_my FROM cemeteries WHERE ' . cemetery_scope_sql('id', $params) . ' ORDER BY name_en');
+    $q->execute($params);
+    $names = [];
+    foreach ($q->fetchAll() as $c) {
+        $names[] = ($lang === 'my' && $c['name_my']) ? $c['name_my'] : $c['name_en'];
+    }
+    $scopeHtml = htmlspecialchars(implode(', ', $names));
 }
-$scopeHtml = $cemName !== '' ? htmlspecialchars($cemName) : t('all_cemeteries');
-if ($admin['cemetery_id'] !== null) {
-    $q = $pdo->prepare('SELECT COUNT(*) FROM graves WHERE cemetery_id = :c');
-    $q->execute([':c' => $admin['cemetery_id']]);
-    $count = (int)$q->fetchColumn();
-} else {
-    $count = (int)$pdo->query('SELECT COUNT(*) FROM graves')->fetchColumn();
-}
+$params = [];
+$cq = $pdo->prepare('SELECT COUNT(*) FROM graves g WHERE ' . cemetery_scope_sql('g.cemetery_id', $params));
+$cq->execute($params);
+$count = (int)$cq->fetchColumn();
 
 $groups = [
     ['menu_burials', [

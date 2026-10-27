@@ -6,9 +6,9 @@ $admin = require_admin();
 $sql = 'SELECT g.id, g.name_en, g.name_my, g.section, g.plot, m.name_en AS cemetery_en, m.name_my AS cemetery_my
         FROM graves g JOIN cemeteries m ON m.id = g.cemetery_id';
 $params = [];
-if ($admin['cemetery_id'] !== null) {
-    $sql .= ' WHERE g.cemetery_id = :c';
-    $params[':c'] = $admin['cemetery_id'];
+if (admin_cemetery_ids() !== null) {
+    $sql .= ' WHERE ' . cemetery_scope_sql('g.cemetery_id', $params);
+    
 }
 $sql .= ' ORDER BY g.id DESC LIMIT 100';
 $stmt = $pdo->prepare($sql);

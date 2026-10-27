@@ -8,9 +8,9 @@ $sql = 'SELECT s.id, s.code, s.lat, s.lng, m.name_en AS cem_en, m.name_my AS cem
         (SELECT COUNT(*) FROM graves g WHERE g.cemetery_id = s.cemetery_id AND g.section = s.code) AS n
         FROM sections s JOIN cemeteries m ON m.id = s.cemetery_id';
 $params = [];
-if ($admin['cemetery_id'] !== null) {
-    $sql .= ' WHERE s.cemetery_id = :c';
-    $params[':c'] = $admin['cemetery_id'];
+if (admin_cemetery_ids() !== null) {
+    $sql .= ' WHERE ' . cemetery_scope_sql('s.cemetery_id', $params);
+    
 }
 $sql .= ' ORDER BY m.name_en, s.code';
 $stmt = $pdo->prepare($sql);

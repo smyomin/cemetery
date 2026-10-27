@@ -7,8 +7,8 @@ $admin = require_admin();
 require_can('burial.create');
 
 $cems = $pdo->query('SELECT id, name_en, name_my FROM cemeteries ORDER BY name_en')->fetchAll();
-if ($admin['cemetery_id'] !== null) {
-    $cems = array_values(array_filter($cems, fn($c) => (int)$c['id'] === $admin['cemetery_id']));
+if (admin_cemetery_ids() !== null) {
+    $cems = array_values(array_filter($cems, fn($c) => can_access_cemetery((int)$c['id'])));
 }
 $allowed = array_map(fn($c) => (int)$c['id'], $cems);
 
