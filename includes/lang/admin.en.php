@@ -70,4 +70,11 @@ return [
     'err_username_taken' => 'This username is already used.',
     'err_role' => 'Choose a role.',
     'err_assign' => 'Choose a cemetery for this role.',
-    'err_password' => 'The password must be at least 10 characters.',];
+    'err_password' => 'The password must be at least 10 characters.',    'all_cemeteries' => 'All cemeteries',
+    'pw_change' => 'Change my password',
+    'pw_current' => 'Current password',
+    'pw_new' => 'New password (at least 10 characters)',
+    'pw_confirm' => 'Repeat the new password',
+    'pw_changed' => 'Password changed.',
+    'err_pw_current' => 'The current password is wrong.',
+    'err_pw_match' => 'The two new passwords do not match.',];
