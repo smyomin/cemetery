@@ -29,6 +29,7 @@ $admin = require_admin();
     <a class="btn" href="/admin/grave-add.php" style="text-align:center;line-height:54px;text-decoration:none;margin:0 0 12px"><?= t('add_burial') ?></a>
     <a class="btn" href="/admin/graves.php" style="text-align:center;line-height:54px;text-decoration:none;margin:0 0 12px"><?= t('burial_list') ?></a>
     <?php if (can('block.edit')): ?><a class="btn" href="/admin/sections.php" style="text-align:center;line-height:54px;text-decoration:none;margin:0 0 12px"><?= t('blocks') ?></a><?php endif; ?>
+    <?php if (can('admin.manage')): ?><a class="btn" href="/admin/admins.php" style="text-align:center;line-height:54px;text-decoration:none;margin:0 0 12px"><?= t('admins') ?></a><?php endif; ?>
     <a class="btn" href="/logout.php" style="text-align:center;line-height:54px;text-decoration:none"><?= t('logout') ?></a>
   </div>
 </main>
