@@ -116,12 +116,12 @@ $J = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT;
     <?php if ($err): ?><p class="err"><?= t($err) ?></p><?php endif; ?>
 
     <label class="lbl" for="cemetery_id"><?= t('cemetery') ?></label>
-    <select class="in" id="cemetery_id" name="cemetery_id">
+    <select class="in" id="cemetery_id" name="cemetery_id" required>
       <?php foreach ($cems as $c): ?><option value="<?= (int)$c['id'] ?>"<?= (int)$c['id'] === $v['cemetery_id'] ? ' selected' : '' ?>><?= htmlspecialchars(($lang === 'my' && $c['name_my']) ? $c['name_my'] : $c['name_en']) ?></option><?php endforeach; ?>
     </select>
 
     <label class="lbl" for="section"><?= t('section') ?></label>
-    <select class="in" id="section" name="section"></select>
+    <select class="in" id="section" name="section" required></select>
     <p class="sm" id="nosec" style="display:none;margin:8px 0 0"><?= t('no_blocks_hint') ?></p>
 
     <label class="lbl" for="plot"><?= t('plot') ?></label>

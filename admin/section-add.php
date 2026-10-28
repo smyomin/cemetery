@@ -63,7 +63,7 @@ $pageTitle = t('add_block');
     <input type="hidden" name="csrf" value="<?= htmlspecialchars(csrf_token()) ?>">
     <?php if ($err): ?><p class="err"><?= t($err) ?></p><?php endif; ?>
     <label class="lbl" for="cemetery_id"><?= t('cemetery') ?></label>
-    <select class="in" id="cemetery_id" name="cemetery_id">
+    <select class="in" id="cemetery_id" name="cemetery_id" required>
       <?php foreach ($cems as $c): ?><option value="<?= (int)$c['id'] ?>"<?= $v['cemetery_id'] === (int)$c['id'] ? ' selected' : '' ?>><?= htmlspecialchars(($lang === 'my' && $c['name_my']) ? $c['name_my'] : $c['name_en']) ?></option><?php endforeach; ?>
     </select>
     <label class="lbl" for="code"><?= t('block_code') ?></label>

@@ -115,13 +115,13 @@ $pageTitle = $row ? t('edit_admin') : t('add_admin');
     <input class="in" id="username" name="username" value="<?= htmlspecialchars($v['username']) ?>" maxlength="50"<?= $row ? ' readonly' : ' required' ?>>
 
     <label class="lbl" for="role"><?= t('role') ?></label>
-    <select class="in" id="role" name="role"<?= $isSelf ? ' disabled' : '' ?>>
+    <select class="in" id="role" name="role" required<?= $isSelf ? ' disabled' : '' ?>>
       <?php foreach ($roles as $r): ?><option value="<?= $r ?>"<?= $v['role'] === $r ? ' selected' : '' ?>><?= t('role_' . $r) ?></option><?php endforeach; ?>
     </select>
     <p class="sm" style="margin:8px 0 0"><?= $isSelf ? t('self_note') : t('role_help') ?></p>
 
     <div id="cemwrap">
-      <p class="lbl"><?= t('assigned_cemeteries') ?></p>
+      <p class="lbl"><?= t('assigned_cemeteries') ?> <span class="star">*</span></p>
       <?php foreach ($cems as $c): ?>
         <label style="display:flex;gap:10px;align-items:center;min-height:44px;font-size:16px"><input type="checkbox" name="cemeteries[]" value="<?= (int)$c['id'] ?>"<?= in_array((int)$c['id'], $selected, true) ? ' checked' : '' ?> style="width:22px;height:22px;flex:none"> <?= htmlspecialchars(($lang === 'my' && $c['name_my']) ? $c['name_my'] : $c['name_en']) ?></label>
       <?php endforeach; ?>

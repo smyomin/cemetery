@@ -103,7 +103,7 @@ $pageTitle = $row ? t('edit_cemetery') : t('add_cemetery');
     <?php if ($err): ?><p class="err"><?= t($err) ?></p><?php endif; ?>
 
     <label class="lbl" for="city_id"><?= t('city') ?></label>
-    <select class="in" id="city_id" name="city_id">
+    <select class="in" id="city_id" name="city_id" required>
       <option value="0"><?= t('choose_cemetery') ?></option>
       <?php foreach ($cities as $c): ?><option value="<?= (int)$c['id'] ?>"<?= $v['city_id'] === (int)$c['id'] ? ' selected' : '' ?>><?= htmlspecialchars(($lang === 'my' && $c['name_my']) ? $c['name_my'] : $c['name_en']) ?></option><?php endforeach; ?>
     </select>

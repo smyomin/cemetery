@@ -109,7 +109,7 @@ $pageTitle = t('edit_burial');
     <?php if ($err): ?><p class="err"><?= t($err) ?></p><?php endif; ?>
 
     <label class="lbl" for="section"><?= t('section') ?></label>
-    <select class="in" id="section" name="section">
+    <select class="in" id="section" name="section" required>
       <?php foreach ($codes as $c): ?><option value="<?= htmlspecialchars($c) ?>"<?= $v['section'] === $c ? ' selected' : '' ?>><?= htmlspecialchars($c) ?></option><?php endforeach; ?>
     </select>
 
