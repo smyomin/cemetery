@@ -4,7 +4,7 @@ require __DIR__ . '/includes/lang.php';
 
 $id = (int)($_GET['id'] ?? 0);
 $stmt = $pdo->prepare(
-    'SELECT g.id, g.name_en, g.name_my, g.name_ar, g.father_name_en, g.father_name_my, g.father_name_ar, g.gender, g.age, g.died_on, g.hijri_date, g.section, g.plot, g.grave_no, g.person_photo, g.grave_photo, g.photo_consent, m.name_en AS cemetery_en, m.name_my AS cemetery_my,
+    'SELECT g.id, g.name_en, g.name_my, g.name_ar, g.father_name_en, g.father_name_my, g.father_name_ar, g.home_city_en, g.home_city_my, g.gender, g.age, g.died_on, g.hijri_date, g.section, g.plot, g.grave_no, g.person_photo, g.grave_photo, g.photo_consent, m.name_en AS cemetery_en, m.name_my AS cemetery_my,
             s.directions_en, s.directions_my,
             COALESCE(s.lat, m.lat) AS lat, COALESCE(s.lng, m.lng) AS lng
      FROM graves g JOIN cemeteries m ON m.id = g.cemetery_id
@@ -81,6 +81,8 @@ if ($g) {
     <?php if ($g['gender']): ?><div class="drow"><span><?= t('gender') ?></span><b><?= t($g['gender']) ?></b></div><?php endif; ?>
     <?php $fa = ($lang === 'my') ? ($g['father_name_my'] ?: $g['father_name_en']) : ($g['father_name_en'] ?: $g['father_name_my']); ?>
     <?php if ($fa || $g['father_name_ar']): ?><div class="drow"><span><?= t('father') ?></span><b><?= htmlspecialchars((string)$fa) ?><?php if ($g['father_name_ar']): ?><br><span class="ar" lang="ar" dir="rtl"><?= htmlspecialchars($g['father_name_ar']) ?></span><?php endif; ?></b></div><?php endif; ?>
+    <?php $hc = ($lang === 'my') ? ($g['home_city_my'] ?: $g['home_city_en']) : ($g['home_city_en'] ?: $g['home_city_my']); ?>
+    <?php if ($hc): ?><div class="drow"><span><?= t('hometown') ?></span><b><?= htmlspecialchars((string)$hc) ?></b></div><?php endif; ?>
     <div class="drow"><span><?= t('cemetery') ?></span><b><?= htmlspecialchars($cem) ?></b></div>
     <div class="drow"><span><?= t('section') ?></span><b><?= htmlspecialchars($g['section']) ?></b></div>
     <div class="drow"><span><?= t('plot') ?></span><b><?= htmlspecialchars($g['plot']) ?></b></div>

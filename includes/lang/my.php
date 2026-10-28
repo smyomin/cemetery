@@ -21,4 +21,4 @@ return [
     'cemetery' => 'သင်္ချိုင်း',
     'grave_not_found' => 'ဤဂူကို ရှာမတွေ့ပါ။',
     'grave_no' => 'ဂူနံပါတ်',    'how_to_find' => 'ဤဂူကို ရှာဖွေနည်း',
-    'directions_button' => 'လမ်းညွှန်ရယူရန်',    'grave_photo_alt' => 'ဂူ၏ ဓာတ်ပုံ',    'father' => 'ဖခင်အမည်',];
+    'directions_button' => 'လမ်းညွှန်ရယူရန်',    'grave_photo_alt' => 'ဂူ၏ ဓာတ်ပုံ',    'father' => 'ဖခင်အမည်',    'hometown' => 'ဇာတိ',];

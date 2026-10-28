@@ -137,4 +137,6 @@ return [
     'err_gender' => 'Choose a valid gender.',
     'err_age' => 'Age must be a whole number from 0 to 130.',
     'err_phone' => 'The phone number may contain only digits, spaces, + ( ) and -.',
-    'err_len' => 'One of the fields is too long.',];
+    'err_len' => 'One of the fields is too long.',    'home_city_en' => 'City or hometown (English)',
+    'home_city_my' => 'City or hometown (Burmese)',
+    'home_city_hint' => 'Where the person was from. For a visitor, their home city or country.',];
