@@ -71,3 +71,4 @@ a{color:var(--green)}
 .hero .container{position:relative}
 .ti{text-shadow:0 1px 3px rgba(0,0,0,.25)}
 main{position:relative;z-index:2}
+.ar{font-family:"Noto Naskh Arabic","Segoe UI",Tahoma,sans-serif;font-size:1.1em}

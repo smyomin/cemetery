@@ -4,7 +4,7 @@ require __DIR__ . '/includes/lang.php';
 
 $id = (int)($_GET['id'] ?? 0);
 $stmt = $pdo->prepare(
-    'SELECT g.*, m.name_en AS cemetery_en, m.name_my AS cemetery_my,
+    'SELECT g.id, g.name_en, g.name_my, g.name_ar, g.father_name_en, g.father_name_my, g.father_name_ar, g.gender, g.age, g.died_on, g.hijri_date, g.section, g.plot, g.grave_no, g.person_photo, g.grave_photo, g.photo_consent, m.name_en AS cemetery_en, m.name_my AS cemetery_my,
             s.directions_en, s.directions_my,
             COALESCE(s.lat, m.lat) AS lat, COALESCE(s.lng, m.lng) AS lng
      FROM graves g JOIN cemeteries m ON m.id = g.cemetery_id
@@ -47,7 +47,7 @@ if ($g) {
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title><?= htmlspecialchars($title ?: t('grave_not_found')) ?></title>
-  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700&family=Noto+Sans+Myanmar:wght@400;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700&family=Noto+Sans+Myanmar:wght@400;600&family=Noto+Naskh+Arabic:wght@400;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="/assets/css/style.css?v=<?= filemtime(__DIR__ . '/assets/css/style.css') ?>">
 </head>
 <body>
@@ -64,6 +64,7 @@ if ($g) {
         <div>
           <h1 class="ti" style="margin:0"><?= htmlspecialchars($title) ?></h1>
           <?php if ($sub): ?><p class="su"><?= htmlspecialchars($sub) ?></p><?php endif; ?>
+          <?php if ($g['name_ar']): ?><p class="su ar" lang="ar" dir="rtl" style="text-align:left"><?= htmlspecialchars($g['name_ar']) ?></p><?php endif; ?>
         </div>
       </div>
     <?php else: ?>
@@ -76,6 +77,10 @@ if ($g) {
   <div class="card grave-card">
     <?php if ($date): ?><div class="drow"><span><?= t('died') ?></span><b><?= htmlspecialchars($date) ?></b></div><?php endif; ?>
     <?php if ($g['hijri_date']): ?><div class="drow"><span><?= t('hijri') ?></span><b><?= htmlspecialchars($g['hijri_date']) ?></b></div><?php endif; ?>
+    <?php if ($g['age'] !== null): ?><div class="drow"><span><?= t('age') ?></span><b><?= (int)$g['age'] ?></b></div><?php endif; ?>
+    <?php if ($g['gender']): ?><div class="drow"><span><?= t('gender') ?></span><b><?= t($g['gender']) ?></b></div><?php endif; ?>
+    <?php $fa = ($lang === 'my') ? ($g['father_name_my'] ?: $g['father_name_en']) : ($g['father_name_en'] ?: $g['father_name_my']); ?>
+    <?php if ($fa || $g['father_name_ar']): ?><div class="drow"><span><?= t('father') ?></span><b><?= htmlspecialchars((string)$fa) ?><?php if ($g['father_name_ar']): ?><br><span class="ar" lang="ar" dir="rtl"><?= htmlspecialchars($g['father_name_ar']) ?></span><?php endif; ?></b></div><?php endif; ?>
     <div class="drow"><span><?= t('cemetery') ?></span><b><?= htmlspecialchars($cem) ?></b></div>
     <div class="drow"><span><?= t('section') ?></span><b><?= htmlspecialchars($g['section']) ?></b></div>
     <div class="drow"><span><?= t('plot') ?></span><b><?= htmlspecialchars($g['plot']) ?></b></div>
