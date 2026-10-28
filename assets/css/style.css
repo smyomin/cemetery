@@ -74,3 +74,4 @@ main{position:relative;z-index:2}
 .ar{font-family:"Noto Naskh Arabic","Segoe UI",Tahoma,sans-serif;font-size:1.1em}
 label.lbl:has(+ [required])::after{content:" *";color:#B3261E;font-weight:700}
 .star{color:#B3261E;font-weight:700}
+.page ul{margin:0 0 12px;padding-left:20px}.page li{margin:0 0 6px}
