@@ -139,4 +139,4 @@ return [
     'err_phone' => 'The phone number may contain only digits, spaces, + ( ) and -.',
     'err_len' => 'One of the fields is too long.',    'home_city_en' => 'City or hometown (English)',
     'home_city_my' => 'City or hometown (Burmese)',
-    'home_city_hint' => 'Where the person was from. For a visitor, their home city or country.',];
+    'home_city_hint' => 'Where the person was from. For a visitor, their home city or country.',    'name_community_my' => 'Arabic-style name (Burmese letters)',];

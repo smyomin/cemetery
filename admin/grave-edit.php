@@ -20,7 +20,7 @@ $sq->execute([':c' => $cemId]);
 $codes = $sq->fetchAll(PDO::FETCH_COLUMN);
 if (!in_array($g['section'], $codes, true)) { $codes[] = $g['section']; }
 
-$fields = ['name_en', 'name_my', 'name_ar', 'father_name_en', 'father_name_my', 'father_name_ar', 'home_city_en', 'home_city_my', 'gender', 'age', 'contact_name', 'contact_phone', 'note', 'died_on', 'hijri_date', 'section', 'plot', 'grave_no'];
+$fields = ['name_en', 'name_my', 'name_community_my', 'name_ar', 'father_name_en', 'father_name_my', 'father_name_ar', 'home_city_en', 'home_city_my', 'gender', 'age', 'contact_name', 'contact_phone', 'note', 'died_on', 'hijri_date', 'section', 'plot', 'grave_no'];
 $v = [];
 foreach ($fields as $k) { $v[$k] = (string)($g[$k] ?? ''); }
 $err = '';
@@ -28,7 +28,7 @@ $err = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     foreach ($fields as $k) { $v[$k] = trim($_POST[$k] ?? ''); }
     $tooLong = mb_strlen($v['contact_name']) > 100 || mb_strlen($v['note']) > 2000;
-    foreach (['name_en', 'name_my', 'name_ar', 'father_name_en', 'father_name_my', 'father_name_ar', 'home_city_en', 'home_city_my'] as $k) {
+    foreach (['name_en', 'name_my', 'name_community_my', 'name_ar', 'father_name_en', 'father_name_my', 'father_name_ar', 'home_city_en', 'home_city_my'] as $k) {
         if (mb_strlen($v[$k]) > 150) { $tooLong = true; }
     }
     $secOk = in_array($v['section'], $codes, true);
@@ -62,9 +62,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $consent = isset($_POST['photo_consent']) ? 1 : 0;
         [$pp, $e1] = apply_photo('person_photo', 'people', $g['person_photo'], isset($_POST['remove_person_photo']));
         [$gp, $e2] = apply_photo('grave_photo', 'graves', $g['grave_photo'], isset($_POST['remove_grave_photo']));
-        $pdo->prepare('UPDATE graves SET name_en = :en, name_my = :my, name_ar = :ar, father_name_en = :fen, father_name_my = :fmy, father_name_ar = :far, home_city_en = :hce, home_city_my = :hcm, gender = :g, age = :age, contact_name = :cn, contact_phone = :cp, note = :note, died_on = :d, hijri_date = :h, section = :s, plot = :p, grave_no = :gn, person_photo = :pp, grave_photo = :gp, photo_consent = :pc WHERE id = :id')
+        $pdo->prepare('UPDATE graves SET name_en = :en, name_my = :my, name_community_my = :cm, name_ar = :ar, father_name_en = :fen, father_name_my = :fmy, father_name_ar = :far, home_city_en = :hce, home_city_my = :hcm, gender = :g, age = :age, contact_name = :cn, contact_phone = :cp, note = :note, died_on = :d, hijri_date = :h, section = :s, plot = :p, grave_no = :gn, person_photo = :pp, grave_photo = :gp, photo_consent = :pc WHERE id = :id')
             ->execute([
-                ':en' => $v['name_en'], ':my' => $nul($v['name_my']), ':ar' => $nul($v['name_ar']),
+                ':en' => $v['name_en'], ':my' => $nul($v['name_my']), ':cm' => $nul($v['name_community_my']), ':ar' => $nul($v['name_ar']),
                 ':fen' => $nul($v['father_name_en']), ':fmy' => $nul($v['father_name_my']), ':far' => $nul($v['father_name_ar']),
                 ':hce' => $nul($v['home_city_en']), ':hcm' => $nul($v['home_city_my']), ':g' => $nul($v['gender']), ':age' => $v['age'] === '' ? null : (int)$v['age'],
                 ':cn' => $nul($v['contact_name']), ':cp' => $nul($v['contact_phone']), ':note' => $nul($v['note']),
@@ -124,6 +124,8 @@ $pageTitle = t('edit_burial');
 
     <label class="lbl" for="name_my"><?= t('name_my') ?></label>
     <input class="in" id="name_my" name="name_my" value="<?= htmlspecialchars($v['name_my']) ?>" maxlength="150">
+    <label class="lbl" for="name_community_my"><?= t('name_community_my') ?></label>
+    <input class="in" id="name_community_my" name="name_community_my" value="<?= htmlspecialchars($v['name_community_my']) ?>" maxlength="200">
 
     <label class="lbl" for="name_ar"><?= t('name_ar') ?></label>
     <input class="in" id="name_ar" name="name_ar" value="<?= htmlspecialchars($v['name_ar']) ?>" maxlength="150" dir="rtl" lang="ar">

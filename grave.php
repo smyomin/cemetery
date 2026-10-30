@@ -4,7 +4,7 @@ require __DIR__ . '/includes/lang.php';
 
 $id = (int)($_GET['id'] ?? 0);
 $stmt = $pdo->prepare(
-    'SELECT g.id, g.name_en, g.name_my, g.name_ar, g.father_name_en, g.father_name_my, g.father_name_ar, g.home_city_en, g.home_city_my, g.gender, g.age, g.died_on, g.hijri_date, g.section, g.plot, g.grave_no, g.person_photo, g.grave_photo, g.photo_consent, m.name_en AS cemetery_en, m.name_my AS cemetery_my,
+    'SELECT g.id, g.name_en, g.name_my, g.name_community_my, g.name_ar, g.father_name_en, g.father_name_my, g.father_name_ar, g.home_city_en, g.home_city_my, g.gender, g.age, g.died_on, g.hijri_date, g.section, g.plot, g.grave_no, g.person_photo, g.grave_photo, g.photo_consent, m.name_en AS cemetery_en, m.name_my AS cemetery_my,
             s.directions_en, s.directions_my,
             COALESCE(s.lat, m.lat) AS lat, COALESCE(s.lng, m.lng) AS lng
      FROM graves g JOIN cemeteries m ON m.id = g.cemetery_id
@@ -64,6 +64,7 @@ if ($g) {
         <div>
           <h1 class="ti" style="margin:0"><?= htmlspecialchars($title) ?></h1>
           <?php if ($sub): ?><p class="su"><?= htmlspecialchars($sub) ?></p><?php endif; ?>
+          <?php if ($g['name_community_my']): ?><p class="su"><?= htmlspecialchars($g['name_community_my']) ?></p><?php endif; ?>
           <?php if ($g['name_ar']): ?><p class="su ar" lang="ar" dir="rtl" style="text-align:left"><?= htmlspecialchars($g['name_ar']) ?></p><?php endif; ?>
         </div>
       </div>

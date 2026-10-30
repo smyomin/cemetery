@@ -9,10 +9,10 @@ if ($q !== '') {
     $stmt = $pdo->prepare(
         'SELECT g.id, g.name_en, g.name_my, g.died_on, g.section, g.plot
          FROM graves g
-         WHERE g.name_en LIKE :q1 OR g.name_my LIKE :q2 OR g.name_ar LIKE :q4 OR g.grave_no = :q3
+         WHERE g.name_en LIKE :q1 OR g.name_my LIKE :q2 OR g.name_ar LIKE :q4 OR g.name_community_my LIKE :q5 OR g.grave_no = :q3
          ORDER BY g.name_en LIMIT 50'
     );
-    $stmt->execute([':q1' => $like, ':q2' => $like, ':q3' => $q, ':q4' => $like]);
+    $stmt->execute([':q1' => $like, ':q2' => $like, ':q3' => $q, ':q4' => $like, ':q5' => $like]);
     $results = $stmt->fetchAll();
 }
 

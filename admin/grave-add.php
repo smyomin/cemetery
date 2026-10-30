@@ -15,7 +15,7 @@ $sq = $pdo->prepare('SELECT cemetery_id AS c, code AS k FROM sections WHERE ' . 
 $sq->execute($sp);
 $sections = $sq->fetchAll();
 
-$fields = ['name_en', 'name_my', 'name_ar', 'father_name_en', 'father_name_my', 'father_name_ar', 'home_city_en', 'home_city_my', 'gender', 'age', 'contact_name', 'contact_phone', 'note', 'died_on', 'hijri_date', 'section', 'plot', 'grave_no'];
+$fields = ['name_en', 'name_my', 'name_community_my', 'name_ar', 'father_name_en', 'father_name_my', 'father_name_ar', 'home_city_en', 'home_city_my', 'gender', 'age', 'contact_name', 'contact_phone', 'note', 'died_on', 'hijri_date', 'section', 'plot', 'grave_no'];
 $v = array_fill_keys($fields, '');
 $v['cemetery_id'] = $allowed[0] ?? 0;
 $err = '';
@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     $v['cemetery_id'] = (int)($_POST['cemetery_id'] ?? 0);
     $tooLong = mb_strlen($v['contact_name']) > 100 || mb_strlen($v['note']) > 2000;
-    foreach (['name_en', 'name_my', 'name_ar', 'father_name_en', 'father_name_my', 'father_name_ar', 'home_city_en', 'home_city_my'] as $k) {
+    foreach (['name_en', 'name_my', 'name_community_my', 'name_ar', 'father_name_en', 'father_name_my', 'father_name_ar', 'home_city_en', 'home_city_my'] as $k) {
         if (mb_strlen($v[$k]) > 150) { $tooLong = true; }
     }
     $secOk = false;
@@ -64,9 +64,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $err = 'err_dup';
     } else {
         $nul = fn($x) => $x === '' ? null : $x;
-        $stmt = $pdo->prepare('INSERT INTO graves (cemetery_id, name_en, name_my, name_ar, father_name_en, father_name_my, father_name_ar, home_city_en, home_city_my, gender, age, contact_name, contact_phone, note, died_on, hijri_date, section, plot, grave_no) VALUES (:c, :en, :my, :ar, :fen, :fmy, :far, :hce, :hcm, :g, :age, :cn, :cp, :note, :d, :h, :s, :p, :gn)');
+        $stmt = $pdo->prepare('INSERT INTO graves (cemetery_id, name_en, name_my, name_community_my, name_ar, father_name_en, father_name_my, father_name_ar, home_city_en, home_city_my, gender, age, contact_name, contact_phone, note, died_on, hijri_date, section, plot, grave_no) VALUES (:c, :en, :my, :cm, :ar, :fen, :fmy, :far, :hce, :hcm, :g, :age, :cn, :cp, :note, :d, :h, :s, :p, :gn)');
         $stmt->execute([
-            ':c' => $v['cemetery_id'], ':en' => $v['name_en'], ':my' => $nul($v['name_my']), ':ar' => $nul($v['name_ar']),
+            ':c' => $v['cemetery_id'], ':en' => $v['name_en'], ':my' => $nul($v['name_my']), ':cm' => $nul($v['name_community_my']), ':ar' => $nul($v['name_ar']),
             ':fen' => $nul($v['father_name_en']), ':fmy' => $nul($v['father_name_my']), ':far' => $nul($v['father_name_ar']),
             ':hce' => $nul($v['home_city_en']), ':hcm' => $nul($v['home_city_my']), ':g' => $nul($v['gender']), ':age' => $v['age'] === '' ? null : (int)$v['age'],
             ':cn' => $nul($v['contact_name']), ':cp' => $nul($v['contact_phone']), ':note' => $nul($v['note']),
@@ -135,6 +135,8 @@ $J = JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT;
 
     <label class="lbl" for="name_my"><?= t('name_my') ?></label>
     <input class="in" id="name_my" name="name_my" value="<?= htmlspecialchars($v['name_my']) ?>" maxlength="150">
+    <label class="lbl" for="name_community_my"><?= t('name_community_my') ?></label>
+    <input class="in" id="name_community_my" name="name_community_my" value="<?= htmlspecialchars($v['name_community_my']) ?>" maxlength="200">
 
     <label class="lbl" for="name_ar"><?= t('name_ar') ?></label>
     <input class="in" id="name_ar" name="name_ar" value="<?= htmlspecialchars($v['name_ar']) ?>" maxlength="150" dir="rtl" lang="ar">
