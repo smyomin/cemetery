@@ -75,3 +75,5 @@ main{position:relative;z-index:2}
 label.lbl:has(+ [required])::after{content:" *";color:#B3261E;font-weight:700}
 .star{color:#B3261E;font-weight:700}
 .page ul{margin:0 0 12px;padding-left:20px}.page li{margin:0 0 6px}
+.warn{padding:10px 12px;border-radius:10px;background:#FFF4D6;color:#5A4300;font-size:14px;line-height:1.5}
+.post{margin:0;font-size:14px;line-height:1.7;max-height:280px;overflow:auto}
