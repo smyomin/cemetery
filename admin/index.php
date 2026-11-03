@@ -24,6 +24,7 @@ $groups = [
         [can('burial.create'), '/admin/grave-add.php', 'add_burial'],
         [true, '/admin/graves.php', 'burial_list'],
         [can('burial.create'), '/admin/import.php', 'import_title'],
+        [true, '/admin/reports.php', 'reports'],
     ]],
     ['menu_setup', [
         [can('block.edit'), '/admin/sections.php', 'blocks'],
