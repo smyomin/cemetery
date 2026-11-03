@@ -155,4 +155,7 @@ return [
     'import_saved' => 'Burial saved.',
     'import_back' => 'Back to the list',
     'import_note_hint' => 'Private note (only admins can see it).',
-    'act_import.skip' => 'Skipped a Facebook post',];
+    'act_import.skip' => 'Skipped a Facebook post',    'filter_tbc' => 'Only records with the location still to be confirmed',
+    'page_of' => 'Page %d of %d',
+    'prev' => 'Previous',
+    'next' => 'Next',];
